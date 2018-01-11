@@ -1,0 +1,165 @@
+
+<!-- saved from url=(0084)https://www.autodesk.com/techpubs/autocad/acad2000/dxf/reading_a_dxf_file_dxf_aa.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="MACRO" content="IF(FE(`achlp.dll&#39;),SetTopicData(`DXF; 008; dxf_aa.HSF [Reading_a_DXF_File_dxf_aa@dxf_2000.hlp]&#39;))">
+
+
+<meta name="ID" content="Reading_a_DXF_File_dxf_aa">
+<title>Reading a DXF File  [DXF - DXF Reference]</title>
+<meta name="BROWSE" content="BROWSE1:000">
+<meta name="WINDOW" content="main">
+<meta name="KEYWORDS" content="ASCII DXF files, reading (example)">
+<meta name="KEYWORDS" content="Visual Basic programs (examples), for reading a DXF file">
+<meta name="KEYWORDS" content="reading a DXF file (example)">
+</head>
+<body>
+
+<table width="100%" cellpadding="5" cellspacing="0" border="0"><tbody><tr><td>
+<font face="Arial" color="#003399" size="3"><b> <a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/drawing_interchange_file_formats.htm">Appendix A -- Drawing Interchange File Formats</a>
+</b></font>
+<hr size="1">
+<font face="Arial" color="#003399" size="3"><b><a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/ascii_dxf_files_dxf_aa.htm"><img src="./Reading a DXF File [DXF - DXF Reference]_files/book2.gif" border="0"> ASCII DXF Files</a> 
+</b></font><br>
+</td></tr><tr><td>
+<font face="Arial" color="#003399" size="3"><b><a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/writing_a_dxf_interface_program_dxf_aa.htm"><img src="./Reading a DXF File [DXF - DXF Reference]_files/bk_space.gif" border="0"> <img src="./Reading a DXF File [DXF - DXF Reference]_files/book2.gif" border="0"> Writing a DXF Interface Program</a> 
+</b></font><br>
+</td></tr><tr><td>
+<font face="Arial" color="#003399" size="3"><b><img src="./Reading a DXF File [DXF - DXF Reference]_files/bk_space.gif" border="0"> <img src="./Reading a DXF File [DXF - DXF Reference]_files/bk_space.gif" border="0"> <img src="./Reading a DXF File [DXF - DXF Reference]_files/book2.gif" border="0"> Reading a DXF File
+</b></font>
+<hr size="1">
+</td></tr></tbody></table>
+
+
+<p><font face="verdana,arial" size="2">The following example is a simple Visual Basic program that reads a DXF file and extracts specific codes and values from a given object in a given section.
+</font></p>
+<font face="Courier New,Courier" size="2">' ReadDXF extracts specified code/value pairs from a DXF file.
+</font><br>
+<font face="Courier New,Courier" size="2">' This function requires four string parameters, a valid DXF
+</font><br>
+<font face="Courier New,Courier" size="2">' file name, a DXF section name, the name of an object in that
+</font><br>
+<font face="Courier New,Courier" size="2">' section, and a comma delimited list of codes.
+</font><br>
+<font face="Courier New,Courier" size="2">'
+</font><br>
+<font face="Courier New,Courier" size="2">Function ReadDXF( _
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ByVal dxfFile As String, ByVal strSection As String, _
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ByVal strObject As String, ByVal strCodeList As String)
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Dim tmpCode, lastObj As String
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Open dxfFile For Input As #1
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;' Get the first code/value pair
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;codes = ReadCodes
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;' Loop through the whole file until the "EOF" line
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;While codes(1) &lt;&gt; "EOF"
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' If the group code is '0' and the value is 'SECTION' ..
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If codes(0) = "0" And codes(1) = "SECTION" Then
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' This must be a new section, so get the next
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' code/value pair.
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;codes = ReadCodes()
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' If this section is the right one ..
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If codes(1) = strSection Then
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' Get the next code/value pair and ..
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;codes = ReadCodes
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' Loop through this section until the 'ENDSEC'
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;While codes(1) &lt;&gt; "ENDSEC"
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' While in a section, all '0' codes indicate
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' an object. If you find a '0' store the
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' object name for future use.
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If codes(0) = "0" Then lastObj = codes(1)
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' If this object is one you're interested in
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If lastObj = strObject Then
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' Surround the code with commas
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmpCode = "," &amp; codes(0) &amp; ","
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' If this code is in the list of codes ..
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If InStr(strCodeList, tmpCode) Then
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' Append the return value.
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ReadDXF = ReadDXF &amp; _
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;codes(0) &amp; "=" &amp; codes(1) &amp; vbCrLf
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End If
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End If
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' Read another code/value pair
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;codes = ReadCodes
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Wend
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End If
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Else
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;codes = ReadCodes
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End If
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Wend
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Close #1
+</font><br>
+<font face="Courier New,Courier" size="2">End Function
+</font><br>
+
+<font face="Courier New,Courier" size="2">' ReadCodes reads two lines from an open file and returns a two item
+</font><br>
+<font face="Courier New,Courier" size="2">' array, a group code and its value. As long as a DXF file is read 
+</font><br>
+<font face="Courier New,Courier" size="2">' two lines at a time, all should be fine. However, to make your 
+</font><br>
+<font face="Courier New,Courier" size="2">' code more reliable, you should add some additional error and
+</font><br>
+<font face="Courier New,Courier" size="2">' sanity checking.
+</font><br>
+<font face="Courier New,Courier" size="2">'
+</font><br>
+<font face="Courier New,Courier" size="2">Function ReadCodes() As Variant
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Dim codeStr, valStr As String
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Line Input #1, codeStr
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Line Input #1, valStr
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;' Trim the leading and trailing space from the code
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;ReadCodes = Array(Trim(codeStr), valStr)
+</font><br>
+<p><font face="Courier New,Courier" size="2">End Function
+</font></p>
+
+
+
+
+</body></html>

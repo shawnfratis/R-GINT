@@ -1,0 +1,25 @@
+procedure main()
+   ml := "N14X<x001> \n_
+N15Q23 \n_
+N16Y<x002> \n_
+N17Q<x003> \n_
+N18Y<x004> \n_
+N19Q23 \n_
+N20Y<x005> \n_
+N21Q23 \n_
+N22X3.413Y28.184"
+
+   entry(ml)                                               
+
+end
+ 
+link strings
+ 
+procedure entry(data)
+
+   V := []
+   data ? while ( tab(upto('<')), put(V,tab(upto('>')+1)) )
+   every writes(v := !set(V)," : ") do 
+      data := replace(data,v,read())
+   write("\nresult follows:\n",data)
+end

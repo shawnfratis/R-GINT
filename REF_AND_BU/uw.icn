@@ -1,0 +1,1248 @@
+#fg3dLite 2017 FratisGraphics
+
+#Program to utilize Unicons 3D capabilities.
+
+#Some of this code is from the University of Arizona and Rosetta Code. Please contact me if you would like specifics of this.
+#shawnfratis@gmail.com
+
+#Integrated with Jafar Al-Gharaibeh's Unicon 3D viewer.
+
+#Made in Unicon, with Unicon IDE
+#unicon.sourceforge.net
+
+##############################
+
+import gui
+$include "guih.icn"
+
+global view
+
+class U3DViewer : Dialog(view_model3d, mFile, miLoadModel, miQuit,
+   miAbout, boarderstat, boarderwin3d, bordercam, tblsummary,
+   tcolattrib, tcolvalue, timesh, tiskeleton, tisummary, tllogmsg, tsstat,
+   menubar, mHelp, tianimation,  start_dir, wdir, files_history , tblanimation,
+   tckeys, tcname, check_box_group_animation , tcFrames, mioptions,
+   mipreferences, treeskeleton, text_button_1, slider_1, text_field_1, text_button_2, text_button_3, text_button_4, text_field_2, text_field_3, text_field_4, text_field_5, label_1, label_2, label_3, label_4, label_5, label_6, text_button_5, text_button_6, label_7, text_button_7, text_field_6, b1, b2, b3, b4, b5, tblandsky, tbskyplane, tf1, tf2, tf3, tf4, tf5, label_10, label_11, label_12, label_8, label_9, tf10, tf6, tf7, tf9, tf8, text_button_8, label_13, label_14, label_15, label_16, label_17, text_button_10, text_button_11, text_button_12, text_button_13, text_button_14, text_button_9, text_field_12, text_field_13, text_field_14, text_field_15, text_field_16, label_18, label_19, label_20, label_21, label_22, label_23, label_24, label_25, text_button_15, text_field_18, text_field_19, text_field_20, text_field_21, text_field_22, text_field_23, text_field_24, text_field_25, tfi2, tfi3, tfi4, overlay_item_1, overlay_set_1, panel_1, mathgrid, panel_2, editable_text_list_2)
+   
+   method component_setup()
+      self.setup()
+      setup_animationbtns()
+      init_history()
+   end
+
+   method end_dialog()
+   end
+
+   method init_dialog()
+      world.w3d := view_model3d.cwin
+      \(world.w3d) | write("Window is null!!")
+   end
+   
+   method init_history()
+      local fin, what, dat, line, mif, f, fname, i
+      start_dir := wdir := chdir() | ""
+      files_history  := []
+      fin := open("last_session.ini") | fail
+      
+      while line := read(fin) do{
+	line ? {
+	  what := tab(find(":")) | next
+	  move(1)
+	  dat :=  tab(0) | next
+	  case what of{
+	    "dir" : stat(dat) & wdir := dat
+	    "file": stat(dat) & put(files_history, dat)
+	  }
+	} # line ?
+      } # while
+      close(fin)
+
+      *files_history>0 | fail
+
+      mFile.add(MenuSeparator())
+
+      every i := 1 to *files_history do {
+	 f := files_history[i]
+	 mif := TextMenuItem()
+	 fname := file_name(f)
+	 mif.set_label(i || ". " ||fname)
+	 mif.connect(self, "on_mif", ACTION_EVENT)
+	 mFile.add(mif)
+	 }
+   end
+   
+   method add_file_history(f)
+      local i, replace, mif, items, base
+      if f==files_history[1] then fail # the new file is already at the top of the list
+      every i := 2 to *files_history do
+	 if f == files_history[i] then {
+	    delete(files_history, i)
+	    break replace := i
+	    }
+      push(files_history, f)
+      return
+      #if *files_history=1 then mFile.add(MenuSeparator())
+	
+      if /replace then{
+	mif := TextMenuItem()
+	mif.set_label(f)
+	mif.connect(self, "on_mif", ACTION_EVENT)
+	mFile.add(mif)
+	}
+      else{
+	items := mFile.get_children()
+	base := *items - *files_history
+	mif := items[base+replace]
+	mFile.remove(mif)
+	mFile.add(mif, base+1)
+	}
+   end
+
+   method on_mif(ev)
+     local mif, i
+     mif := ev.get_source()
+     mif.get_label() ? i := integer(tab(find(".")))
+     \i | fail
+     load_file(files_history[i])
+   end
+   
+   method on_miLoadModel(ev)
+    local fd, fname
+    #$ifdef _UNIX
+       
+         fd := FileDialog()
+         fd.set_directory(wdir)
+         fd.show_modal()
+         fname := fd.get_result() | fail
+         
+    ##$else
+     #fname  :=  WinOpenDialog("Open 3D Model File...", "", 50) | fail
+    #$endif    
+
+      if not(map(fname[-4:0]) == ".s3d" | map(fname[-2:0]) == ".x" )then
+         fail
+
+     load_file(fname)
+           
+   end
+   
+     method load_file(fname)   
+     world.w3d := view_model3d.cwin
+     world.load (fname, 1.8) | fail    
+     wdir := directory_name(fname) 
+     add_file_history(fname)  
+
+     fill_summary()
+     fill_animation()
+     world.render()
+     self.display()
+   end
+   
+   method fill_animation()
+   local anim, LL := []
+      every anim := world.mod3d.animations() do {
+	 put(LL, [anim, world.mod3d.get_animation_max_key(anim) | "?"])
+	 }
+      tblanimation.set_contents(LL)
+      tsstat.display()
+   end
+   
+   method fill_summary()
+      local LL := [
+	 [ "meshes", world.mod3d.mesh_count() ],
+	 [ "vertices", world.mod3d.vertex_count() ],
+	 [ "normals", world.mod3d.normals_count() ],
+	 [ "polygons", world.mod3d.face_count() ],
+	 [ "bones", world.mod3d.bone_count() ],
+	 [ "animations", world.mod3d.animation_count() ],
+	 [ "all materials", world.mod3d.material_count() ],
+	 [ "textured materials", world.mod3d.texmaterial_count() ],
+	 [ "texture files", world.mod3d.texture_files_count() ],
+	 [ "texture coords", world.mod3d.texture_coords_count() ]
+	 ]
+      tblsummary.set_contents(LL)
+      tsstat.display()
+   end
+
+   method on_miQuit(ev)
+   local fout, f
+      chdir(start_dir)
+      fout := open("last_session.ini", "w") |
+	 stop("can't write last_session.ini")
+      write(fout, "dir:",wdir )
+      every f := !files_history do
+	 write(fout, "file:", f)
+      close(fout)
+      self.dispose()
+   end
+
+   method on_miAbout(ev)
+    local win
+    win:=&window
+    &window := &null
+    Notice("       Unicon 3D viewer         ",
+           "         Version 1.0            ",
+           "",
+	   " Developer : Jafar Al-Gharaibeh ",
+	   " Email     : to.jafar@gmail.com ",
+	   " Date      : Dec 30, 2010       ")
+    
+    &window := win
+   end
+   
+   method logit(msgs[])
+   local msg := ""
+   static L
+   initial L := tllogmsg.get_contents()
+      every msg ||:= \(!msgs)
+      put(L, string(msg))
+      tllogmsg.set_contents(L)
+      tllogmsg.set_selections([*L])
+      tllogmsg.set_cursor(*L)
+      tllogmsg.ensure_row_visible(*L)
+      tllogmsg.display()
+   end
+   
+   method on_play()
+      if on_tblanimation() then
+	world.set_auto_refresh()
+   end
+   
+   method on_stop()
+      world.unset_auto_refresh()
+   end
+
+   method on_pause()
+      world.unset_auto_refresh()
+   end
+
+   method setup_animationbtns()
+      local animation_toolbar, icnbtn, panel_1
+      
+      animation_toolbar := ToolBar()
+      animation_toolbar.set_pos("2", "70%")
+      animation_toolbar.set_size("96%", "41")
+      #animation_toolbar.set_draw_border()
+      
+      panel_1 := Panel()
+      panel_1.set_pos("2", "50%")
+      panel_1.set_size("96%", "35")
+      panel_1.set_align("l", "c")
+      
+      check_box_group_animation := CheckBoxGroup()
+      
+      icnbtn := ToggleIconButton()
+      icnbtn.set_pos("34", "50%")
+      icnbtn.set_align("l", "c")
+      icnbtn.set_draw_border()
+      icnbtn.set_tooltip("Play")
+      icnbtn.set_no_keyboard()
+      check_box_group_animation.add(icnbtn)
+      icnbtn.set_img("18,c1,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~33~~~~~~~~~~~~~~~~303~~~~~~~~~~~~~~~3003~~~~~~~~~~~~~~30003~~~~~~~~~~~~~300003~~~~~~~~~~~~3000003~~~~~~~~~~~30000003~~~~~~~~~~30000006~~~~~~~~~~3000006~~~~~~~~~~~300006~~~~~~~~~~~~30006~~~~~~~~~~~~~3006~~~~~~~~~~~~~~306~~~~~~~~~~~~~~~36~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+      icnbtn.connect(self, "on_play", ACTION_EVENT)
+      panel_1.add(icnbtn)
+      
+      icnbtn := ToggleIconButton()
+      icnbtn.set_pos("68", "50%")
+      icnbtn.set_align("l", "c")
+      icnbtn.set_draw_border()
+      icnbtn.set_tooltip("Pause")
+      icnbtn.set_no_keyboard()
+      check_box_group_animation.add(icnbtn)
+      icnbtn.set_img("18,c1,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~333333~333333~~~~~300006~300006~~~~~300006~300006~~~~~300006~300006~~~~~300006~300006~~~~~300006~300006~~~~~300006~300006~~~~~300006~300006~~~~~300006~300006~~~~~300006~300006~~~~~300006~300006~~~~~366666~366666~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+      icnbtn.connect(self, "on_pause", ACTION_EVENT)
+      panel_1.add(icnbtn)
+      
+      icnbtn := ToggleIconButton()
+      icnbtn.set_pos("102", "50%")
+      icnbtn.set_align("l", "c")
+      icnbtn.set_draw_border()
+      icnbtn.set_tooltip("Stop")
+      icnbtn.set_no_keyboard()
+      check_box_group_animation.add(icnbtn)
+      icnbtn.set_img("18,c1,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~333333333333~~~~~~300000000006~~~~~~300000000006~~~~~~300000000006~~~~~~300000000006~~~~~~300000000006~~~~~~300000000006~~~~~~300000000006~~~~~~300000000006~~~~~~300000000006~~~~~~300000000006~~~~~~366666666666~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+      icnbtn.connect(self, "on_stop", ACTION_EVENT)
+      panel_1.add(icnbtn)
+      animation_toolbar.add(panel_1)
+      
+      tianimation.add(animation_toolbar)
+   end   
+   
+   method on_tblanimation(ev)
+     local LL, a, row
+     static last_anim
+     initial last_anim := ""
+     LL := tblanimation.get_contents()
+     row := tblanimation.row_get_cursor() | fail
+     a := row[1]
+     (\a)~==last_anim | fail
+     logit("current animation: ", a)
+     world.mod3d.pick_animation(a)
+     last_anim := a
+     return
+   end
+
+   #################################################
+
+   method on_mipreferences(ev)
+   end
+
+   method on_treeskeleton(ev)
+   end 
+
+   method on_slider_1(ev)
+   end
+
+   ##############################################
+
+   method on_b1(ev)
+   texskysphere05()
+   end
+
+   method on_b2(ev)
+   texgroundplane05()
+   end
+
+   method on_b3(ev)
+   texskyplane05()
+   end
+
+   method on_b4(ev)
+   mainp()
+   end
+
+   method on_b5(ev)
+   iscan()
+   end
+ 
+   method on_mathgrid(ev)
+   texgridplane01()
+   end
+
+   method on_tblandsky(ev)
+   texgroundplane01()
+   end
+
+   method on_tbskyplane(ev)
+   texskyplane01()
+   end
+
+   method on_tf1(ev)
+   scene01(tf1.get_contents())
+   end
+
+   method on_tf2(ev)
+   comlist01(tf2.get_contents())
+   end
+
+   method on_tf3(ev)
+   comlist02(tf3.get_contents())
+   end
+
+   method on_tf4(ev)
+   comlist03(tf4.get_contents())
+   end
+
+   method on_tf5(ev)
+   tmod01(tf5.get_contents())
+   end
+
+   method on_tf6(ev)
+   cube01(tf6.get_contents())
+   end
+
+   method on_tf7(ev)
+   sphere01(tf7.get_contents())
+   end
+
+   method on_tf8(ev)
+   cyl01(tf8.get_contents())
+   end
+
+   method on_tf9(ev)
+   comlist04(tf9.get_contents())
+   end
+
+   method on_tf10(ev)
+   comlist05(tf10.get_contents())
+   end
+
+   method on_text_button_10(ev)
+   maind()   
+   end 
+  
+   method on_text_button_11(ev)
+   edittexskysphere05()
+   end
+
+   method on_text_button_12(ev)
+   edittexgroundplane05()
+   end
+   
+   method on_text_field_12(ev)
+   texeditsphere01(text_field_12.get_contents())
+   end
+
+   method on_tfi2(ev)
+   texeditcube01(tfi2.get_contents())
+   end
+
+   method on_tfi4(ev)
+   cyltex01(tfi4.get_contents())
+   end
+
+   method on_tfi3(ev)
+   texplane02(tfi3.get_contents())
+   end
+
+   method on_text_button_8(ev)
+   tdref()
+   end
+
+   method on_text_button_9(ev)
+   refresh()
+   end
+
+   method on_text_button_13(ev)
+   cls()
+   end
+
+   method on_text_button_14(ev)
+   list()
+   end
+
+   method on_text_field_13(ev)
+   end
+
+   method on_text_field_14(ev)
+   end
+
+   ###########################################################
+
+   method on_text_field_15(ev)
+   end
+
+   method on_text_field_16(ev)
+   end
+
+   method on_text_button_15(ev)
+   end
+
+   method on_text_field_2(ev)
+   end
+
+   method on_text_field_3(ev)
+   end
+
+   method on_text_field_4(ev)
+   end
+
+   method on_text_field_5(ev)
+   end
+
+   method on_text_field_6(ev)
+   end
+
+   method on_text_field_7(ev)
+   end
+
+   method on_text_field_8(ev)
+   end
+
+   method on_text_field_9(ev)
+   end
+
+   method on_text_field_21(ev)
+   end
+
+   method on_text_field_22(ev)
+   entry(text_field_22.get_contents())
+   end
+
+   method on_text_field_23(ev)
+   rantexsphere01(text_field_23.get_contents())
+   end
+
+   method on_text_field_24(ev)
+   rantexeditcube01(text_field_24.get_contents())
+   end
+
+   ####################################################   
+
+   method on_panel_2(ev)
+   entry(panel_2.get_contents())
+   end
+
+   #####################################################
+
+   method on_editable_text_list_2(ev)
+   entry(editable_text_list_2.get_contents())
+   end
+
+   ######################################################
+
+   method setup()
+      self.set_attribs("size=1396,736", "bg=very dark gray", "label=fg3d gui TEST")
+      menubar := MenuBar()
+      menubar.set_pos("0", "0")
+      mFile := Menu()
+      mFile.set_label("File")
+      miLoadModel := TextMenuItem()
+      miLoadModel.set_label("Load Model...")
+      miLoadModel.connect(self, "on_miLoadModel", ACTION_EVENT)
+      mFile.add(miLoadModel)
+      mipreferences := TextMenuItem()
+      mipreferences.set_label("Preferences...")
+      mipreferences.connect(self, "on_mipreferences", ACTION_EVENT)
+      mFile.add(mipreferences)
+      miQuit := TextMenuItem()
+      miQuit.set_label("Quit")
+      miQuit.connect(self, "on_miQuit", ACTION_EVENT)
+      mFile.add(miQuit)
+      menubar.add(mFile)
+      mHelp := Menu()
+      mHelp.set_label("Help")
+      miAbout := TextMenuItem()
+      miAbout.set_label("About")
+      miAbout.connect(self, "on_miAbout", ACTION_EVENT)
+      mHelp.add(miAbout)
+      menubar.add(mHelp)
+      self.add(menubar)
+      bordercam := Border()
+      bordercam.set_pos(9, 32)
+      bordercam.set_size(198, 544)
+      bordercam.set_internal_alignment("l")
+      tf1 := TextField()
+      tf1.set_pos("8", 211)
+      tf1.set_size("109", "20")
+      tf1.set_draw_border()
+      tf1.set_attribs("bg=black", "fg=green")
+      tf1.connect(self, "on_tf1", ACTION_EVENT)
+      tf1.set_contents("1")
+      bordercam.add(tf1)
+      tf3 := TextField()
+      tf3.set_pos("8", 85)
+      tf3.set_size("109", "20")
+      tf3.set_draw_border()
+      tf3.set_attribs("bg=black", "fg=green")
+      tf3.connect(self, "on_tf3", ACTION_EVENT)
+      tf3.set_contents("1")
+      bordercam.add(tf3)
+      label_1 := Label()
+      label_1.set_pos("124", 216)
+      label_1.set_size("58", "13")
+      label_1.set_attribs("fg=yellow")
+      label_1.set_internal_alignment("l")
+      label_1.set_label("vox rad")
+      bordercam.add(label_1)
+      label_2 := Label()
+      label_2.set_pos("124", 135)
+      label_2.set_attribs("fg=yellow")
+      label_2.set_internal_alignment("l")
+      label_2.set_label("vox r array")
+      bordercam.add(label_2)
+      tf2 := TextField()
+      tf2.set_pos("8", 133)
+      tf2.set_size("109", "20")
+      tf2.set_draw_border()
+      tf2.set_attribs("bg=black", "fg=green")
+      tf2.connect(self, "on_tf2", ACTION_EVENT)
+      tf2.set_contents("1")
+      bordercam.add(tf2)
+      tf4 := TextField()
+      tf4.set_pos("7", 184)
+      tf4.set_size("109", "20")
+      tf4.set_draw_border()
+      tf4.set_attribs("bg=black", "fg=green")
+      tf4.connect(self, "on_tf4", ACTION_EVENT)
+      tf4.set_contents("1")
+      bordercam.add(tf4)
+      label_5 := Label()
+      label_5.set_pos("124", 88)
+      label_5.set_attribs("fg=yellow")
+      label_5.set_internal_alignment("l")
+      label_5.set_label("vox array")
+      bordercam.add(label_5)
+      tf5 := TextField()
+      tf5.set_pos("8", 399)
+      tf5.set_size("109", "20")
+      tf5.set_draw_border()
+      tf5.set_attribs("bg=black", "fg=green")
+      tf5.connect(self, "on_tf5", ACTION_EVENT)
+      tf5.set_contents("1")
+      bordercam.add(tf5)
+      label_6 := Label()
+      label_6.set_pos("124", 186)
+      label_6.set_attribs("fg=yellow")
+      label_6.set_internal_alignment("l")
+      label_6.set_label("vox t array")
+      bordercam.add(label_6)
+      label_7 := Label()
+      label_7.set_pos("124", 405)
+      label_7.set_attribs("fg=yellow")
+      label_7.set_internal_alignment("l")
+      label_7.set_label("poly array")
+      bordercam.add(label_7)
+      tf6 := TextField()
+      tf6.set_pos("9", 6)
+      tf6.set_size("109", "20")
+      tf6.set_draw_border()
+      tf6.set_attribs("bg=black", "fg=green")
+      tf6.connect(self, "on_tf6", ACTION_EVENT)
+      tf6.set_contents("1")
+      bordercam.add(tf6)
+      tf7 := TextField()
+      tf7.set_pos("8", 32)
+      tf7.set_size("109", "20")
+      tf7.set_draw_border()
+      tf7.set_attribs("bg=black", "fg=green")
+      tf7.connect(self, "on_tf7", ACTION_EVENT)
+      tf7.set_contents("1")
+      bordercam.add(tf7)
+      label_8 := Label()
+      label_8.set_pos("124", 10)
+      label_8.set_attribs("fg=yellow")
+      label_8.set_internal_alignment("l")
+      label_8.set_label("cube")
+      bordercam.add(label_8)
+      label_9 := Label()
+      label_9.set_pos("124", 35)
+      label_9.set_attribs("fg=yellow")
+      label_9.set_internal_alignment("l")
+      label_9.set_label("sphere")
+      bordercam.add(label_9)
+      tf8 := TextField()
+      tf8.set_pos("8", 58)
+      tf8.set_size("109", "20")
+      tf8.set_draw_border()
+      tf8.set_attribs("bg=black", "fg=green")
+      tf8.connect(self, "on_tf8", ACTION_EVENT)
+      tf8.set_contents("1")
+      bordercam.add(tf8)
+      tf9 := TextField()
+      tf9.set_pos("8", 158)
+      tf9.set_size("109", "20")
+      tf9.set_draw_border()
+      tf9.set_attribs("bg=black", "fg=green")
+      tf9.connect(self, "on_tf9", ACTION_EVENT)
+      tf9.set_contents("1")
+      bordercam.add(tf9)
+      tf10 := TextField()
+      tf10.set_pos("8", 109)
+      tf10.set_size("109", "20")
+      tf10.set_draw_border()
+      tf10.set_attribs("bg=black", "fg=green")
+      tf10.connect(self, "on_tf10", ACTION_EVENT)
+      tf10.set_contents("1")
+      bordercam.add(tf10)
+      label_10 := Label()
+      label_10.set_pos("124", 61)
+      label_10.set_attribs("fg=yellow")
+      label_10.set_internal_alignment("l")
+      label_10.set_label("cylinder")
+      bordercam.add(label_10)
+      label_11 := Label()
+      label_11.set_pos("124", 160)
+      label_11.set_attribs("fg=yellow")
+      label_11.set_internal_alignment("l")
+      label_11.set_label("r vox spheres")
+      bordercam.add(label_11)
+      label_12 := Label()
+      label_12.set_pos("124", 112)
+      label_12.set_attribs("fg=yellow")
+      label_12.set_internal_alignment("l")
+      label_12.set_label("vox spheres")
+      bordercam.add(label_12)
+      text_field_21 := TextField()
+      text_field_21.set_pos("8", 452)
+      text_field_21.set_size("109", "20")
+      text_field_21.set_draw_border()
+      text_field_21.set_attribs("bg=black", "fg=green")
+      text_field_21.connect(self, "on_text_field_21", ACTION_EVENT)
+      text_field_21.set_contents("1")
+      bordercam.add(text_field_21)
+      text_field_22 := TextField()
+      text_field_22.set_pos("8", "427")
+      text_field_22.set_size("109", "20")
+      text_field_22.set_draw_border()
+      text_field_22.set_attribs("bg=black", "fg=green")
+      text_field_22.connect(self, "on_text_field_22", ACTION_EVENT)
+      text_field_22.set_contents("1")
+      bordercam.add(text_field_22)
+      text_field_25 := TextField()
+      text_field_25.set_pos("8", 478)
+      text_field_25.set_size("109", "20")
+      text_field_25.set_draw_border()
+      text_field_25.set_attribs("bg=black", "fg=green")
+      text_field_25.connect(self, "on_text_field_9", CONTENT_CHANGED_EVENT)
+      text_field_25.set_contents("1")
+      bordercam.add(text_field_25)
+      label_23 := Label()
+      label_23.set_pos(124, 455)
+      label_23.set_attribs("fg=yellow")
+      label_23.set_internal_alignment("l")
+      label_23.set_label("Label")
+      bordercam.add(label_23)
+      label_24 := Label()
+      label_24.set_pos(124, 481)
+      label_24.set_attribs("fg=yellow")
+      label_24.set_internal_alignment("l")
+      label_24.set_label("Label")
+      bordercam.add(label_24)
+      label_25 := Label()
+      label_25.set_pos(124, 430)
+      label_25.set_attribs("fg=yellow")
+      label_25.set_internal_alignment("l")
+      label_25.set_label("Label")
+      bordercam.add(label_25)
+      panel_2 := Panel()
+      panel_2.set_pos(0, 246)
+      panel_2.set_size(194, 78)
+      panel_2.set_draw_border()
+      self.set_focus(panel_2)
+      panel_2.connect(self, "on_panel_2", CONTENT_CHANGED_EVENT)
+      bordercam.add(panel_2)
+      editable_text_list_2 := EditableTextList()
+      editable_text_list_2.set_pos("9", "329")
+      editable_text_list_2.set_size("174", "65")
+      editable_text_list_2.set_draw_border()
+      editable_text_list_2.connect(self, "on_editable_text_list_2", ACTION_EVENT)
+      editable_text_list_2.set_contents([""])
+      bordercam.add(editable_text_list_2)
+      self.add(bordercam)
+      boarderstat := Border()
+      boarderstat.set_pos(6, 616)
+      boarderstat.set_size(199, 105)
+      boarderstat.set_internal_alignment("l")
+      tllogmsg := TextList()
+      tllogmsg.set_pos(77, 40)
+      tllogmsg.set_size(46, 52)
+      tllogmsg.set_draw_border()
+      tllogmsg.set_attribs("bg=black", "fg=red")
+      tllogmsg.set_tooltip("Status and log messages")
+      tllogmsg.set_contents(["Log Messages"])
+      boarderstat.add(tllogmsg)
+      self.add(boarderstat)
+      mathgrid := TextButton()
+      mathgrid.set_pos("23", "552")
+      mathgrid.set_size("70", "40")
+      mathgrid.set_attribs("fg=yellow")
+      mathgrid.connect(self, "on_mathgrid", ACTION_EVENT)
+      mathgrid.clear_toggles()
+      mathgrid.set_label("tex plane 1")
+      mathgrid.set_internal_alignment("c")
+      self.add(mathgrid)
+      text_button_13 := TextButton()
+      text_button_13.set_pos(109, 551)
+      text_button_13.set_size("70", "40")
+      text_button_13.set_attribs("fg=yellow")
+      text_button_13.connect(self, "on_text_button_13", ACTION_EVENT)
+      text_button_13.clear_toggles()
+      text_button_13.set_label("clear scrn")
+      text_button_13.set_internal_alignment("c")
+      self.add(text_button_13)
+      view_model3d := Subwindow3D()
+      view_model3d.set_pos(215, 33)
+      view_model3d.set_size(1175, 687)
+      self.add(view_model3d)
+      tsstat := TabSet()
+      tsstat.set_pos(6, 607)
+      tsstat.set_size(198, 112)
+      tsstat.set_tooltip("Model Statistics & Info")
+      tisummary := TabItem()
+      tisummary.set_label("Summary")
+      tblsummary := Table()
+      tblsummary.set_pos("2", "2")
+      tblsummary.set_size("100%-6", "100%-6")
+      tblsummary.set_contents([])
+      tcolattrib := TableColumn()
+      tcolattrib.set_label("Attrib")
+      tcolattrib.set_internal_alignment("l")
+      tblsummary.add_column(tcolattrib)
+      tcolvalue := TableColumn()
+      tcolvalue.set_label("Value/Count")
+      tcolvalue.set_internal_alignment("l")
+      tblsummary.add_column(tcolvalue)
+      tisummary.add(tblsummary)
+      tsstat.add(tisummary)
+      timesh := TabItem()
+      timesh.set_label("Mesh")
+      tsstat.add(timesh)
+      tiskeleton := TabItem()
+      tiskeleton.set_label("Skeleton")
+      treeskeleton := Tree()
+      treeskeleton.set_pos("2", "2")
+      treeskeleton.set_size("100%-6", "100%-6")
+      treeskeleton.set_draw_border()
+      treeskeleton.connect(self, "on_treeskeleton", ACTION_EVENT)
+      tiskeleton.add(treeskeleton)
+      tsstat.add(tiskeleton)
+      tianimation := TabItem()
+      tianimation.set_label("Animation")
+      tblanimation := Table()
+      tblanimation.set_pos(2, 4)
+      tblanimation.set_size("100%-6", "70%")
+      tblanimation.connect(self, "on_tblanimation", ACTION_EVENT)
+      tblanimation.set_select_one()
+      tblanimation.set_contents([])
+      tcname := TableColumn()
+      tcname.set_label("Name")
+      tcname.set_internal_alignment("l")
+      tblanimation.add_column(tcname)
+      tcFrames := TableColumn()
+      tcFrames.set_label("#Frames")
+      tcFrames.set_internal_alignment("l")
+      tblanimation.add_column(tcFrames)
+      tianimation.add(tblanimation)
+      tsstat.add(tianimation)
+      tsstat.set_which_one(tianimation)
+      self.add(tsstat)
+      panel_1 := Panel()
+      panel_1.set_pos(4, 602)
+      panel_1.set_size(206, 121)
+      self.add(panel_1)
+      overlay_set_1 := OverlaySet()
+      overlay_set_1.set_pos(4, 599)
+      overlay_set_1.set_size(206, 130)
+      overlay_item_1 := OverlayItem()
+      overlay_set_1.add(overlay_item_1)
+      overlay_set_1.set_which_one(overlay_item_1)
+      self.add(overlay_set_1)
+      self.connect(self, "on_miLoadModel", ACTION_EVENT)
+   end
+
+initially
+   self.Dialog.initially()
+   logger := view := self
+end
+
+procedure main()
+   local d
+   world := World()
+   gui::dispatcher := Dispatcher3D()
+   d := U3DViewer()
+   d.connect(d, "on_miQuit", CLOSE_BUTTON_EVENT)
+   d.show_modal()
+end
+
+### Ivib-v2 layout ##
+#class|Canvas|17|Name Table|table|integer|0|24|string|border|integer|3|
+#string|custom|integer|2|string|edit_list|integer|1|string|editable_tex
+#t_list|integer|2|string|icon_button|integer|1|string|label|integer|25|
+#string|list|integer|1|string|menu|integer|6|string|menu_bar|integer|1|
+#string|on_text_field|integer|9|string|overlay_item|integer|2|string|ov
+#erlay_set|integer|2|string|panel|integer|2|string|scroll_bar|integer|1
+#|string|slider|integer|1|string|tab_item|integer|5|string|tab_set|inte
+#ger|2|string|table|integer|3|string|table_column|integer|5|string|text
+#_button|integer|15|string|text_field|integer|26|string|text_list|integ
+#er|3|string|text_menu_item|integer|4|string|tree|integer|1|SuperClass 
+#Name|string|Dialog|Import Name|string|gui|Button Groups|class|ButtonGr
+#oupSet|2|Parent Canvas|1|Boxes|list|0|Checkbox Groups|class|CheckBoxGr
+#oupSet|2|Parent Canvas|1|Boxes|list|0|Gen Indent|integer|3|Gen Main|in
+#teger|1|Gen Component Setup|integer|1|Gen Init Dialog|integer|1|Gen In
+#itially|integer|1|Dialog Struct|class|CDialog|4|Min Width|null|Min Hei
+#ght|null|Ticker Rate|null|Attribs|list|2|string|bg=very dark gray|stri
+#ng|label=fg3d gui TEST|Name|string|U3DViewer|Width|integer|1396|Height
+#|integer|736|Items|list|9|class|CanvasMenuBar|26|Parent Canvas|1|Name|
+#string|menubar|Class Name|string|MenuBar|Import Name|string|gui|X Fix|
+#integer|1|Y Fix|integer|1|W Fix|integer|1|H Fix|integer|1|W Default|in
+#teger|1|H Default|integer|1|X Spec|string|0|Y Spec|string|0|W Spec|str
+#ing|100%|H Spec|integer|24|X Align|string|l|Y Align|string|t|Is shaded
+#|null|Is Button Subclass|null|Draw Border|null|Attribs|list|0|Tooltip|
+#null|Accel|null|Event Handlers|list|0|Class Variable|integer|1|Parent 
+#Component|1|Menus|list|2|class|CanvasMenu|17|Name|string|mFile|Class N
+#ame|string|Menu|Import Name|string|gui|Accel|null|Label|string|File|La
+#bel Left|null|Label Right|null|Is shaded|null|Img Left|null|Img Left W
+#idth|null|Img Left Height|null|Img Right|string|9,c1,0~~~~~~~~000~~~~~
+#~00000~~~~0000000~~0000000000000000~~00000~~~~000~~~~~~0~~~~~~~~|Img R
+#ight Width|integer|9|Img Right Height|integer|9|Event Method|null|Clas
+#s Variable|integer|1|Children|list|3|class|CanvasTextMenuItem|16|Name|
+#string|miLoadModel|Class Name|string|TextMenuItem|Import Name|string|g
+#ui|Accel|null|Label|string|Load Model...|Label Left|null|Label Right|n
+#ull|Is shaded|null|Img Left|null|Img Left Width|null|Img Left Height|n
+#ull|Img Right|null|Img Right Width|null|Img Right Height|null|Event Me
+#thod|string|on_miLoadModel|Class Variable|integer|1|class|CanvasTextMe
+#nuItem|16|Name|string|mipreferences|Class Name|string|TextMenuItem|Imp
+#ort Name|string|gui|Accel|null|Label|string|Preferences...|Label Left|
+#null|Label Right|null|Is shaded|null|Img Left|null|Img Left Width|null
+#|Img Left Height|null|Img Right|null|Img Right Width|null|Img Right He
+#ight|null|Event Method|string|on_mipreferences|Class Variable|integer|
+#1|class|CanvasTextMenuItem|16|Name|string|miQuit|Class Name|string|Tex
+#tMenuItem|Import Name|string|gui|Accel|null|Label|string|Quit|Label Le
+#ft|null|Label Right|null|Is shaded|null|Img Left|null|Img Left Width|n
+#ull|Img Left Height|null|Img Right|null|Img Right Width|null|Img Right
+# Height|null|Event Method|string|on_miQuit|Class Variable|integer|1|cl
+#ass|CanvasMenu|17|Name|string|mHelp|Class Name|string|Menu|Import Name
+#|string|gui|Accel|null|Label|string|Help|Label Left|null|Label Right|n
+#ull|Is shaded|null|Img Left|null|Img Left Width|null|Img Left Height|n
+#ull|Img Right|string|9,c1,0~~~~~~~~000~~~~~~00000~~~~0000000~~00000000
+#00000000~~00000~~~~000~~~~~~0~~~~~~~~|Img Right Width|integer|9|Img Ri
+#ght Height|integer|9|Event Method|null|Class Variable|integer|1|Childr
+#en|list|1|class|CanvasTextMenuItem|16|Name|string|miAbout|Class Name|s
+#tring|TextMenuItem|Import Name|string|gui|Accel|null|Label|string|Abou
+#t|Label Left|null|Label Right|null|Is shaded|null|Img Left|null|Img Le
+#ft Width|null|Img Left Height|null|Img Right|null|Img Right Width|null
+#|Img Right Height|null|Event Method|string|on_miAbout|Class Variable|i
+#nteger|1|class|CanvasBorder|28|Parent Canvas|1|Name|string|bordercam|C
+#lass Name|string|Border|Import Name|string|gui|X Fix|null|Y Fix|null|W
+# Fix|null|H Fix|null|W Default|null|H Default|null|X Spec|integer|9|Y 
+#Spec|integer|32|W Spec|integer|198|H Spec|integer|544|X Align|string|l
+#|Y Align|string|t|Is shaded|null|Is Button Subclass|null|Draw Border|n
+#ull|Attribs|list|0|Tooltip|null|Accel|null|Event Handlers|list|0|Class
+# Variable|integer|1|Parent Component|1|Internal Alignment|string|l|Chi
+#ldren|list|28|class|CanvasTextField|27|Parent Canvas|1|Name|string|tf1
+#|Class Name|string|TextField|Import Name|string|gui|X Fix|integer|1|Y 
+#Fix|null|W Fix|null|H Fix|null|W Default|null|H Default|null|X Spec|st
+#ring|8|Y Spec|integer|211|W Spec|string|109|H Spec|string|20|X Align|s
+#tring|l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|Draw B
+#order|integer|1|Attribs|list|2|string|bg=black|string|fg=green|Tooltip
+#|null|Accel|null|Event Handlers|list|1|list|2|string|ACTION_EVENT|stri
+#ng|on_tf1|Class Variable|integer|1|Parent Component|22|Contents|string
+#|1|Filter String|string||class|CanvasTextField|27|Parent Canvas|1|Name
+#|string|tf3|Class Name|string|TextField|Import Name|string|gui|X Fix|i
+#nteger|1|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H Default|nul
+#l|X Spec|string|8|Y Spec|integer|85|W Spec|string|109|H Spec|string|20
+#|X Align|string|l|Y Align|string|t|Is shaded|null|Is Button Subclass|n
+#ull|Draw Border|integer|1|Attribs|list|2|string|bg=black|string|fg=gre
+#en|Tooltip|null|Accel|null|Event Handlers|list|1|list|2|string|ACTION_
+#EVENT|string|on_tf3|Class Variable|integer|1|Parent Component|22|Conte
+#nts|string|1|Filter String|string||class|CanvasLabel|27|Parent Canvas|
+#1|Name|string|label_1|Class Name|string|Label|Import Name|string|gui|X
+# Fix|integer|1|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H Defau
+#lt|null|X Spec|string|124|Y Spec|integer|216|W Spec|string|58|H Spec|s
+#tring|13|X Align|string|l|Y Align|string|t|Is shaded|null|Is Button Su
+#bclass|null|Draw Border|null|Attribs|list|1|string|fg=yellow|Tooltip|n
+#ull|Accel|null|Event Handlers|list|0|Class Variable|integer|1|Parent C
+#omponent|22|Label|string|vox rad|Internal Align|string|l|class|CanvasL
+#abel|27|Parent Canvas|1|Name|string|label_2|Class Name|string|Label|Im
+#port Name|string|gui|X Fix|integer|1|Y Fix|null|W Fix|null|H Fix|null|
+#W Default|integer|1|H Default|integer|1|X Spec|string|124|Y Spec|integ
+#er|135|W Spec|integer|56|H Spec|integer|14|X Align|string|l|Y Align|st
+#ring|t|Is shaded|null|Is Button Subclass|null|Draw Border|null|Attribs
+#|list|1|string|fg=yellow|Tooltip|null|Accel|null|Event Handlers|list|0
+#|Class Variable|integer|1|Parent Component|22|Label|string|vox r array
+#|Internal Align|string|l|class|CanvasTextField|27|Parent Canvas|1|Name
+#|string|tf2|Class Name|string|TextField|Import Name|string|gui|X Fix|i
+#nteger|1|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H Default|nul
+#l|X Spec|string|8|Y Spec|integer|133|W Spec|string|109|H Spec|string|2
+#0|X Align|string|l|Y Align|string|t|Is shaded|null|Is Button Subclass|
+#null|Draw Border|integer|1|Attribs|list|2|string|bg=black|string|fg=gr
+#een|Tooltip|null|Accel|null|Event Handlers|list|1|list|2|string|ACTION
+#_EVENT|string|on_tf2|Class Variable|integer|1|Parent Component|22|Cont
+#ents|string|1|Filter String|string||class|CanvasTextField|27|Parent Ca
+#nvas|1|Name|string|tf4|Class Name|string|TextField|Import Name|string|
+#gui|X Fix|integer|1|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H 
+#Default|null|X Spec|string|7|Y Spec|integer|184|W Spec|string|109|H Sp
+#ec|string|20|X Align|string|l|Y Align|string|t|Is shaded|null|Is Butto
+#n Subclass|null|Draw Border|integer|1|Attribs|list|2|string|bg=black|s
+#tring|fg=green|Tooltip|null|Accel|null|Event Handlers|list|1|list|2|st
+#ring|ACTION_EVENT|string|on_tf4|Class Variable|integer|1|Parent Compon
+#ent|22|Contents|string|1|Filter String|string||class|CanvasLabel|27|Pa
+#rent Canvas|1|Name|string|label_5|Class Name|string|Label|Import Name|
+#string|gui|X Fix|integer|1|Y Fix|null|W Fix|null|H Fix|null|W Default|
+#integer|1|H Default|integer|1|X Spec|string|124|Y Spec|integer|88|W Sp
+#ec|integer|49|H Spec|integer|14|X Align|string|l|Y Align|string|t|Is s
+#haded|null|Is Button Subclass|null|Draw Border|null|Attribs|list|1|str
+#ing|fg=yellow|Tooltip|null|Accel|null|Event Handlers|list|0|Class Vari
+#able|integer|1|Parent Component|22|Label|string|vox array|Internal Ali
+#gn|string|l|class|CanvasTextField|27|Parent Canvas|1|Name|string|tf5|C
+#lass Name|string|TextField|Import Name|string|gui|X Fix|integer|1|Y Fi
+#x|null|W Fix|null|H Fix|null|W Default|null|H Default|null|X Spec|stri
+#ng|8|Y Spec|integer|399|W Spec|string|109|H Spec|string|20|X Align|str
+#ing|l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|Draw Bor
+#der|integer|1|Attribs|list|2|string|bg=black|string|fg=green|Tooltip|n
+#ull|Accel|null|Event Handlers|list|1|list|2|string|ACTION_EVENT|string
+#|on_tf5|Class Variable|integer|1|Parent Component|22|Contents|string|1
+#|Filter String|string||class|CanvasLabel|27|Parent Canvas|1|Name|strin
+#g|label_6|Class Name|string|Label|Import Name|string|gui|X Fix|integer
+#|1|Y Fix|null|W Fix|null|H Fix|null|W Default|integer|1|H Default|inte
+#ger|1|X Spec|string|124|Y Spec|integer|186|W Spec|integer|56|H Spec|in
+#teger|14|X Align|string|l|Y Align|string|t|Is shaded|null|Is Button Su
+#bclass|null|Draw Border|null|Attribs|list|1|string|fg=yellow|Tooltip|n
+#ull|Accel|null|Event Handlers|list|0|Class Variable|integer|1|Parent C
+#omponent|22|Label|string|vox t array|Internal Align|string|l|class|Can
+#vasLabel|27|Parent Canvas|1|Name|string|label_7|Class Name|string|Labe
+#l|Import Name|string|gui|X Fix|integer|1|Y Fix|null|W Fix|null|H Fix|n
+#ull|W Default|integer|1|H Default|integer|1|X Spec|string|124|Y Spec|i
+#nteger|405|W Spec|integer|52|H Spec|integer|14|X Align|string|l|Y Alig
+#n|string|t|Is shaded|null|Is Button Subclass|null|Draw Border|null|Att
+#ribs|list|1|string|fg=yellow|Tooltip|null|Accel|null|Event Handlers|li
+#st|0|Class Variable|integer|1|Parent Component|22|Label|string|poly ar
+#ray|Internal Align|string|l|class|CanvasTextField|27|Parent Canvas|1|N
+#ame|string|tf6|Class Name|string|TextField|Import Name|string|gui|X Fi
+#x|integer|1|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H Default|
+#null|X Spec|string|9|Y Spec|integer|6|W Spec|string|109|H Spec|string|
+#20|X Align|string|l|Y Align|string|t|Is shaded|null|Is Button Subclass
+#|null|Draw Border|integer|1|Attribs|list|2|string|bg=black|string|fg=g
+#reen|Tooltip|null|Accel|null|Event Handlers|list|1|list|2|string|ACTIO
+#N_EVENT|string|on_tf6|Class Variable|integer|1|Parent Component|22|Con
+#tents|string|1|Filter String|string||class|CanvasTextField|27|Parent C
+#anvas|1|Name|string|tf7|Class Name|string|TextField|Import Name|string
+#|gui|X Fix|integer|1|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H
+# Default|null|X Spec|string|8|Y Spec|integer|32|W Spec|string|109|H Sp
+#ec|string|20|X Align|string|l|Y Align|string|t|Is shaded|null|Is Butto
+#n Subclass|null|Draw Border|integer|1|Attribs|list|2|string|bg=black|s
+#tring|fg=green|Tooltip|null|Accel|null|Event Handlers|list|1|list|2|st
+#ring|ACTION_EVENT|string|on_tf7|Class Variable|integer|1|Parent Compon
+#ent|22|Contents|string|1|Filter String|string||class|CanvasLabel|27|Pa
+#rent Canvas|1|Name|string|label_8|Class Name|string|Label|Import Name|
+#string|gui|X Fix|integer|1|Y Fix|null|W Fix|null|H Fix|null|W Default|
+#integer|1|H Default|integer|1|X Spec|string|124|Y Spec|integer|10|W Sp
+#ec|integer|23|H Spec|integer|14|X Align|string|l|Y Align|string|t|Is s
+#haded|null|Is Button Subclass|null|Draw Border|null|Attribs|list|1|str
+#ing|fg=yellow|Tooltip|null|Accel|null|Event Handlers|list|0|Class Vari
+#able|integer|1|Parent Component|22|Label|string|cube|Internal Align|st
+#ring|l|class|CanvasLabel|27|Parent Canvas|1|Name|string|label_9|Class 
+#Name|string|Label|Import Name|string|gui|X Fix|integer|1|Y Fix|null|W 
+#Fix|null|H Fix|null|W Default|integer|1|H Default|integer|1|X Spec|str
+#ing|124|Y Spec|integer|35|W Spec|integer|33|H Spec|integer|14|X Align|
+#string|l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|Draw 
+#Border|null|Attribs|list|1|string|fg=yellow|Tooltip|null|Accel|null|Ev
+#ent Handlers|list|0|Class Variable|integer|1|Parent Component|22|Label
+#|string|sphere|Internal Align|string|l|class|CanvasTextField|27|Parent
+# Canvas|1|Name|string|tf8|Class Name|string|TextField|Import Name|stri
+#ng|gui|X Fix|integer|1|Y Fix|null|W Fix|null|H Fix|null|W Default|null
+#|H Default|null|X Spec|string|8|Y Spec|integer|58|W Spec|string|109|H 
+#Spec|string|20|X Align|string|l|Y Align|string|t|Is shaded|null|Is But
+#ton Subclass|null|Draw Border|integer|1|Attribs|list|2|string|bg=black
+#|string|fg=green|Tooltip|null|Accel|null|Event Handlers|list|1|list|2|
+#string|ACTION_EVENT|string|on_tf8|Class Variable|integer|1|Parent Comp
+#onent|22|Contents|string|1|Filter String|string||class|CanvasTextField
+#|27|Parent Canvas|1|Name|string|tf9|Class Name|string|TextField|Import
+# Name|string|gui|X Fix|integer|1|Y Fix|null|W Fix|null|H Fix|null|W De
+#fault|null|H Default|null|X Spec|string|8|Y Spec|integer|158|W Spec|st
+#ring|109|H Spec|string|20|X Align|string|l|Y Align|string|t|Is shaded|
+#null|Is Button Subclass|null|Draw Border|integer|1|Attribs|list|2|stri
+#ng|bg=black|string|fg=green|Tooltip|null|Accel|null|Event Handlers|lis
+#t|1|list|2|string|ACTION_EVENT|string|on_tf9|Class Variable|integer|1|
+#Parent Component|22|Contents|string|1|Filter String|string||class|Canv
+#asTextField|27|Parent Canvas|1|Name|string|tf10|Class Name|string|Text
+#Field|Import Name|string|gui|X Fix|integer|1|Y Fix|null|W Fix|null|H F
+#ix|null|W Default|null|H Default|null|X Spec|string|8|Y Spec|integer|1
+#09|W Spec|string|109|H Spec|string|20|X Align|string|l|Y Align|string|
+#t|Is shaded|null|Is Button Subclass|null|Draw Border|integer|1|Attribs
+#|list|2|string|bg=black|string|fg=green|Tooltip|null|Accel|null|Event 
+#Handlers|list|1|list|2|string|ACTION_EVENT|string|on_tf10|Class Variab
+#le|integer|1|Parent Component|22|Contents|string|1|Filter String|strin
+#g||class|CanvasLabel|27|Parent Canvas|1|Name|string|label_10|Class Nam
+#e|string|Label|Import Name|string|gui|X Fix|integer|1|Y Fix|null|W Fix
+#|null|H Fix|null|W Default|integer|1|H Default|integer|1|X Spec|string
+#|124|Y Spec|integer|61|W Spec|integer|40|H Spec|integer|14|X Align|str
+#ing|l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|Draw Bor
+#der|null|Attribs|list|1|string|fg=yellow|Tooltip|null|Accel|null|Event
+# Handlers|list|0|Class Variable|integer|1|Parent Component|22|Label|st
+#ring|cylinder|Internal Align|string|l|class|CanvasLabel|27|Parent Canv
+#as|1|Name|string|label_11|Class Name|string|Label|Import Name|string|g
+#ui|X Fix|integer|1|Y Fix|null|W Fix|null|H Fix|null|W Default|integer|
+#1|H Default|integer|1|X Spec|string|124|Y Spec|integer|160|W Spec|inte
+#ger|67|H Spec|integer|14|X Align|string|l|Y Align|string|t|Is shaded|n
+#ull|Is Button Subclass|null|Draw Border|null|Attribs|list|1|string|fg=
+#yellow|Tooltip|null|Accel|null|Event Handlers|list|0|Class Variable|in
+#teger|1|Parent Component|22|Label|string|r vox spheres|Internal Align|
+#string|l|class|CanvasLabel|27|Parent Canvas|1|Name|string|label_12|Cla
+#ss Name|string|Label|Import Name|string|gui|X Fix|integer|1|Y Fix|null
+#|W Fix|null|H Fix|null|W Default|integer|1|H Default|integer|1|X Spec|
+#string|124|Y Spec|integer|112|W Spec|integer|60|H Spec|integer|14|X Al
+#ign|string|l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|D
+#raw Border|null|Attribs|list|1|string|fg=yellow|Tooltip|null|Accel|nul
+#l|Event Handlers|list|0|Class Variable|integer|1|Parent Component|22|L
+#abel|string|vox spheres|Internal Align|string|l|class|CanvasTextField|
+#27|Parent Canvas|1|Name|string|text_field_21|Class Name|string|TextFie
+#ld|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|null|
+#W Default|null|H Default|null|X Spec|string|8|Y Spec|integer|452|W Spe
+#c|string|109|H Spec|string|20|X Align|string|l|Y Align|string|t|Is sha
+#ded|null|Is Button Subclass|null|Draw Border|integer|1|Attribs|list|2|
+#string|bg=black|string|fg=green|Tooltip|null|Accel|null|Event Handlers
+#|list|1|list|2|string|ACTION_EVENT|string|on_text_field_21|Class Varia
+#ble|integer|1|Parent Component|22|Contents|string|1|Filter String|stri
+#ng||class|CanvasTextField|27|Parent Canvas|1|Name|string|text_field_22
+#|Class Name|string|TextField|Import Name|string|gui|X Fix|null|Y Fix|n
+#ull|W Fix|null|H Fix|null|W Default|null|H Default|null|X Spec|string|
+#8|Y Spec|string|427|W Spec|string|109|H Spec|string|20|X Align|string|
+#l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|Draw Border|
+#integer|1|Attribs|list|2|string|bg=black|string|fg=green|Tooltip|null|
+#Accel|null|Event Handlers|list|1|list|2|string|ACTION_EVENT|string|on_
+#text_field_22|Class Variable|integer|1|Parent Component|22|Contents|st
+#ring|1|Filter String|string||class|CanvasTextField|27|Parent Canvas|1|
+#Name|string|text_field_25|Class Name|string|TextField|Import Name|stri
+#ng|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H De
+#fault|null|X Spec|string|8|Y Spec|integer|478|W Spec|string|109|H Spec
+#|string|20|X Align|string|l|Y Align|string|t|Is shaded|null|Is Button 
+#Subclass|null|Draw Border|integer|1|Attribs|list|2|string|bg=black|str
+#ing|fg=green|Tooltip|null|Accel|null|Event Handlers|list|1|list|2|stri
+#ng|CONTENT_CHANGED_EVENT|string|on_text_field_9|Class Variable|integer
+#|1|Parent Component|22|Contents|string|1|Filter String|string||class|C
+#anvasLabel|27|Parent Canvas|1|Name|string|label_23|Class Name|string|L
+#abel|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|nul
+#l|W Default|integer|1|H Default|integer|1|X Spec|integer|124|Y Spec|in
+#teger|455|W Spec|integer|26|H Spec|integer|14|X Align|string|l|Y Align
+#|string|t|Is shaded|null|Is Button Subclass|null|Draw Border|null|Attr
+#ibs|list|1|string|fg=yellow|Tooltip|null|Accel|null|Event Handlers|lis
+#t|0|Class Variable|integer|1|Parent Component|22|Label|string|Label|In
+#ternal Align|string|l|class|CanvasLabel|27|Parent Canvas|1|Name|string
+#|label_24|Class Name|string|Label|Import Name|string|gui|X Fix|null|Y 
+#Fix|null|W Fix|null|H Fix|null|W Default|integer|1|H Default|integer|1
+#|X Spec|integer|124|Y Spec|integer|481|W Spec|integer|26|H Spec|intege
+#r|14|X Align|string|l|Y Align|string|t|Is shaded|null|Is Button Subcla
+#ss|null|Draw Border|null|Attribs|list|1|string|fg=yellow|Tooltip|null|
+#Accel|null|Event Handlers|list|0|Class Variable|integer|1|Parent Compo
+#nent|22|Label|string|Label|Internal Align|string|l|class|CanvasLabel|2
+#7|Parent Canvas|1|Name|string|label_25|Class Name|string|Label|Import 
+#Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|null|W Default|
+#integer|1|H Default|integer|1|X Spec|integer|124|Y Spec|integer|430|W 
+#Spec|integer|26|H Spec|integer|14|X Align|string|l|Y Align|string|t|Is
+# shaded|null|Is Button Subclass|null|Draw Border|null|Attribs|list|1|s
+#tring|fg=yellow|Tooltip|null|Accel|null|Event Handlers|list|0|Class Va
+#riable|integer|1|Parent Component|22|Label|string|Label|Internal Align
+#|string|l|class|CanvasPanel|26|Parent Canvas|1|Name|string|panel_2|Cla
+#ss Name|string|Panel|Import Name|string|gui|X Fix|null|Y Fix|null|W Fi
+#x|null|H Fix|null|W Default|null|H Default|null|X Spec|integer|0|Y Spe
+#c|integer|246|W Spec|integer|194|H Spec|integer|78|X Align|string|l|Y 
+#Align|string|t|Is shaded|null|Is Button Subclass|null|Draw Border|inte
+#ger|1|Attribs|list|0|Tooltip|null|Accel|null|Event Handlers|list|1|lis
+#t|2|string|CONTENT_CHANGED_EVENT|string|on_panel_2|Class Variable|inte
+#ger|1|Parent Component|22|Children|list|0|class|CanvasEditableTextList
+#|26|Parent Canvas|1|Name|string|editable_text_list_2|Class Name|string
+#|EditableTextList|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|n
+#ull|H Fix|null|W Default|null|H Default|null|X Spec|string|9|Y Spec|st
+#ring|329|W Spec|string|174|H Spec|string|65|X Align|string|l|Y Align|s
+#tring|t|Is shaded|null|Is Button Subclass|null|Draw Border|integer|1|A
+#ttribs|list|0|Tooltip|null|Accel|null|Event Handlers|list|1|list|2|str
+#ing|ACTION_EVENT|string|on_editable_text_list_2|Class Variable|integer
+#|1|Parent Component|22|Contents|list|1|string||Title Obj|null|class|Ca
+#nvasBorder|28|Parent Canvas|1|Name|string|boarderstat|Class Name|strin
+#g|Border|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix
+#|null|W Default|null|H Default|null|X Spec|integer|6|Y Spec|integer|61
+#6|W Spec|integer|199|H Spec|integer|105|X Align|string|l|Y Align|strin
+#g|t|Is shaded|null|Is Button Subclass|null|Draw Border|null|Attribs|li
+#st|0|Tooltip|null|Accel|null|Event Handlers|list|0|Class Variable|inte
+#ger|1|Parent Component|1|Internal Alignment|string|l|Children|list|1|c
+#lass|CanvasTextList|29|Parent Canvas|1|Name|string|tllogmsg|Class Name
+#|string|TextList|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|nu
+#ll|H Fix|null|W Default|null|H Default|null|X Spec|integer|77|Y Spec|i
+#nteger|40|W Spec|integer|46|H Spec|integer|52|X Align|string|l|Y Align
+#|string|t|Is shaded|null|Is Button Subclass|null|Draw Border|integer|1
+#|Attribs|list|2|string|bg=black|string|fg=red|Tooltip|string|Status an
+#d log messages|Accel|null|Event Handlers|list|0|Class Variable|integer
+#|1|Parent Component|127|Select One|null|Select Many|null|Checked|list|
+#1|null|Contents|list|1|string|Log Messages|Title Obj|null|class|Canvas
+#TextButton|36|Parent Canvas|1|Name|string|mathgrid|Class Name|string|T
+#extButton|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fi
+#x|null|W Default|null|H Default|null|X Spec|string|23|Y Spec|string|55
+#2|W Spec|string|70|H Spec|string|40|X Align|string|l|Y Align|string|t|
+#Is shaded|null|Is Button Subclass|integer|1|Draw Border|null|Attribs|l
+#ist|1|string|fg=yellow|Tooltip|null|Accel|null|Event Handlers|list|1|l
+#ist|2|string|ACTION_EVENT|string|on_mathgrid|Class Variable|integer|1|
+#Parent Component|1|Label|string|tex plane 1|No Keyboard|null|Img Up|nu
+#ll|Img Down|null|Img Width|null|Img Height|null|Is Checked Flag|null|I
+#s Checkbox Flag|null|Parent CheckBoxGroup|null|Parent Button Group|nul
+#l|Internal Align|string|c|class|CanvasTextButton|36|Parent Canvas|1|Na
+#me|string|text_button_13|Class Name|string|TextButton|Import Name|stri
+#ng|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H De
+#fault|null|X Spec|integer|109|Y Spec|integer|551|W Spec|string|70|H Sp
+#ec|string|40|X Align|string|l|Y Align|string|t|Is shaded|null|Is Butto
+#n Subclass|integer|1|Draw Border|null|Attribs|list|1|string|fg=yellow|
+#Tooltip|null|Accel|null|Event Handlers|list|1|list|2|string|ACTION_EVE
+#NT|string|on_text_button_13|Class Variable|integer|1|Parent Component|
+#1|Label|string|clear scrn|No Keyboard|null|Img Up|null|Img Down|null|I
+#mg Width|null|Img Height|null|Is Checked Flag|null|Is Checkbox Flag|nu
+#ll|Parent CheckBoxGroup|null|Parent Button Group|null|Internal Align|s
+#tring|c|class|CanvasCustom|25|Parent Canvas|1|Name|string|view_model3d
+#|Class Name|string|Subwindow3D|Import Name|string|gui|X Fix|null|Y Fix
+#|null|W Fix|null|H Fix|null|W Default|null|H Default|null|X Spec|integ
+#er|215|Y Spec|integer|33|W Spec|integer|1175|H Spec|integer|687|X Alig
+#n|string|l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|Dra
+#w Border|null|Attribs|list|0|Tooltip|null|Accel|null|Event Handlers|li
+#st|0|Class Variable|integer|1|Parent Component|1|class|CanvasTabSet|27
+#|Parent Canvas|1|Name|string|tsstat|Class Name|string|TabSet|Import Na
+#me|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|null|W Default|nu
+#ll|H Default|null|X Spec|integer|6|Y Spec|integer|607|W Spec|integer|1
+#98|H Spec|integer|112|X Align|string|l|Y Align|string|t|Is shaded|null
+#|Is Button Subclass|null|Draw Border|null|Attribs|list|0|Tooltip|strin
+#g|Model Statistics & Info|Accel|null|Event Handlers|list|0|Class Varia
+#ble|integer|1|Parent Component|1|Children|list|4|class|CanvasTabItem|2
+#8|Parent Canvas|1|Name|string|tisummary|Class Name|string|TabItem|Impo
+#rt Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|null|W Defau
+#lt|null|H Default|null|X Spec|integer|0|Y Spec|integer|0|W Spec|string
+#|100%|H Spec|string|100%|X Align|string|l|Y Align|string|t|Is shaded|n
+#ull|Is Button Subclass|null|Draw Border|null|Attribs|list|0|Tooltip|nu
+#ll|Accel|null|Event Handlers|null|Class Variable|integer|1|Parent Comp
+#onent|147|Label|string|Summary|Parent TabSet|147|Children|list|1|class
+#|CanvasTable|28|Parent Canvas|1|Name|string|tblsummary|Class Name|stri
+#ng|Table|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix
+#|null|W Default|null|H Default|null|X Spec|string|2|Y Spec|string|2|W 
+#Spec|string|100%-6|H Spec|string|100%-6|X Align|string|l|Y Align|strin
+#g|t|Is shaded|null|Is Button Subclass|null|Draw Border|null|Attribs|li
+#st|0|Tooltip|null|Accel|null|Event Handlers|list|0|Class Variable|inte
+#ger|1|Parent Component|151|Select One|null|Select Many|null|Columns|li
+#st|2|class|CanvasTableColumn|6|Name|string|tcolattrib|Class Variable|i
+#nteger|1|Label|string|Attrib|Column Width|integer|79|Internal Alignmen
+#t|string|l|Auto width flag|integer|1|class|CanvasTableColumn|6|Name|st
+#ring|tcolvalue|Class Variable|integer|1|Label|string|Value/Count|Colum
+#n Width|integer|79|Internal Alignment|string|l|Auto width flag|integer
+#|1|class|CanvasTabItem|28|Parent Canvas|1|Name|string|timesh|Class Nam
+#e|string|TabItem|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|nu
+#ll|H Fix|null|W Default|null|H Default|null|X Spec|integer|0|Y Spec|in
+#teger|0|W Spec|string|100%|H Spec|string|100%|X Align|string|l|Y Align
+#|string|t|Is shaded|null|Is Button Subclass|null|Draw Border|null|Attr
+#ibs|list|0|Tooltip|null|Accel|null|Event Handlers|null|Class Variable|
+#integer|1|Parent Component|147|Label|string|Mesh|Parent TabSet|147|Chi
+#ldren|list|0|class|CanvasTabItem|28|Parent Canvas|1|Name|string|tiskel
+#eton|Class Name|string|TabItem|Import Name|string|gui|X Fix|null|Y Fix
+#|null|W Fix|null|H Fix|null|W Default|null|H Default|null|X Spec|integ
+#er|0|Y Spec|integer|0|W Spec|string|100%|H Spec|string|100%|X Align|st
+#ring|l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|Draw Bo
+#rder|null|Attribs|list|0|Tooltip|null|Accel|null|Event Handlers|null|C
+#lass Variable|integer|1|Parent Component|147|Label|string|Skeleton|Par
+#ent TabSet|147|Children|list|1|class|CanvasTree|29|Parent Canvas|1|Nam
+#e|string|treeskeleton|Class Name|string|Tree|Import Name|string|gui|X 
+#Fix|null|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H Default|nul
+#l|X Spec|string|2|Y Spec|string|2|W Spec|string|100%-6|H Spec|string|1
+#00%-6|X Align|string|l|Y Align|string|t|Is shaded|null|Is Button Subcl
+#ass|null|Draw Border|integer|1|Attribs|list|0|Tooltip|null|Accel|null|
+#Event Handlers|list|1|list|2|string|ACTION_EVENT|string|on_treeskeleto
+#n|Class Variable|integer|1|Parent Component|163|Select One|null|Select
+# Many|null|Show Root Handles|integer|1|Show Root|integer|1|class|Canva
+#sTabItem|28|Parent Canvas|1|Name|string|tianimation|Class Name|string|
+#TabItem|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|
+#null|W Default|null|H Default|null|X Spec|integer|0|Y Spec|integer|0|W
+# Spec|string|100%|H Spec|string|100%|X Align|string|l|Y Align|string|t
+#|Is shaded|null|Is Button Subclass|null|Draw Border|null|Attribs|list|
+#0|Tooltip|null|Accel|null|Event Handlers|null|Class Variable|integer|1
+#|Parent Component|147|Label|string|Animation|Parent TabSet|147|Childre
+#n|list|1|class|CanvasTable|28|Parent Canvas|1|Name|string|tblanimation
+#|Class Name|string|Table|Import Name|string|gui|X Fix|null|Y Fix|null|
+#W Fix|null|H Fix|null|W Default|null|H Default|null|X Spec|integer|2|Y
+# Spec|integer|4|W Spec|string|100%-6|H Spec|string|70%|X Align|string|
+#l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|Draw Border|
+#null|Attribs|list|0|Tooltip|null|Accel|null|Event Handlers|list|1|list
+#|2|string|ACTION_EVENT|string|on_tblanimation|Class Variable|integer|1
+#|Parent Component|170|Select One|integer|1|Select Many|null|Columns|li
+#st|2|class|CanvasTableColumn|6|Name|string|tcname|Class Variable|integ
+#er|1|Label|string|Name|Column Width|integer|79|Internal Alignment|stri
+#ng|l|Auto width flag|integer|1|class|CanvasTableColumn|6|Name|string|t
+#cFrames|Class Variable|integer|1|Label|string|#Frames|Column Width|int
+#eger|79|Internal Alignment|string|l|Auto width flag|integer|1|Which On
+#e|170|class|CanvasPanel|26|Parent Canvas|1|Name|string|panel_1|Class N
+#ame|string|Panel|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|nu
+#ll|H Fix|null|W Default|null|H Default|null|X Spec|integer|4|Y Spec|in
+#teger|602|W Spec|integer|206|H Spec|integer|121|X Align|string|l|Y Ali
+#gn|string|t|Is shaded|null|Is Button Subclass|null|Draw Border|null|At
+#tribs|list|0|Tooltip|null|Accel|null|Event Handlers|null|Class Variabl
+#e|integer|1|Parent Component|1|Children|list|0|class|CanvasOverlaySet|
+#27|Parent Canvas|1|Name|string|overlay_set_1|Class Name|string|Overlay
+#Set|Import Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|null
+#|W Default|null|H Default|null|X Spec|integer|4|Y Spec|integer|599|W S
+#pec|integer|206|H Spec|integer|130|X Align|string|l|Y Align|string|t|I
+#s shaded|null|Is Button Subclass|null|Draw Border|null|Attribs|list|0|
+#Tooltip|null|Accel|null|Event Handlers|null|Class Variable|integer|1|P
+#arent Component|1|Children|list|1|class|CanvasOverlayItem|27|Parent Ca
+#nvas|1|Name|string|overlay_item_1|Class Name|string|OverlayItem|Import
+# Name|string|gui|X Fix|null|Y Fix|null|W Fix|null|H Fix|null|W Default
+#|null|H Default|null|X Spec|integer|0|Y Spec|integer|0|W Spec|string|1
+#00%|H Spec|string|100%|X Align|string|l|Y Align|string|t|Is shaded|nul
+#l|Is Button Subclass|null|Draw Border|null|Attribs|list|0|Tooltip|null
+#|Accel|null|Event Handlers|null|Class Variable|integer|1|Parent Compon
+#ent|183|Children|list|0|Parent OverlaySet|183|Which One|186|Initial Fo
+#cus|117|Event Handlers|list|1|list|2|string|ACTION_EVENT|string|on_miL
+#oadModel|

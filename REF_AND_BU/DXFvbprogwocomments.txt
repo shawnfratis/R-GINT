@@ -1,0 +1,50 @@
+Function ReadDXF( _ 
+        ByVal dxfFile As String, ByVal strSection As String, _ 
+        ByVal strObject As String, ByVal strCodeList As String) 
+    Dim tmpCode, lastObj As String 
+    Open dxfFile For Input As #1 
+    
+    codes = ReadCodes 
+    
+    While codes(1) <> "EOF" 
+        
+        If codes(0) = "0" And codes(1) = "SECTION" Then 
+            
+            codes = ReadCodes() 
+            
+            If codes(1) = strSection Then 
+                
+                codes = ReadCodes 
+                
+                While codes(1) <> "ENDSEC" 
+                    
+                    If codes(0) = "0" Then lastObj = codes(1) 
+                   
+                    If lastObj = strObject Then 
+                        
+                        tmpCode = "," & codes(0) & "," 
+                        
+                        If InStr(strCodeList, tmpCode) Then 
+                            
+                            ReadDXF = ReadDXF & _ 
+                                codes(0) & "=" & codes(1) & vbCrLf 
+                        End If 
+                    End If 
+                   
+                    codes = ReadCodes 
+                Wend 
+            End If 
+        Else 
+            codes = ReadCodes 
+        End If 
+    Wend 
+    Close #1 
+End Function 
+
+Function ReadCodes() As Variant 
+    Dim codeStr, valStr As String 
+    Line Input #1, codeStr 
+    Line Input #1, valStr 
+    
+    ReadCodes = Array(Trim(codeStr), valStr) 
+End Function

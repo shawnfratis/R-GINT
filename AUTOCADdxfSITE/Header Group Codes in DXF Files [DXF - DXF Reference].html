@@ -1,0 +1,45 @@
+
+<!-- saved from url=(0097)https://www.autodesk.com/techpubs/autocad/acad2000/dxf/header_group_codes_in_dxf_files_dxf_aa.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="ID" content="Header_Group_Codes_in_DXF_Files_dxf_aa">
+<title>Header Group Codes in DXF Files  [DXF - DXF Reference]</title>
+<meta name="BROWSE" content="BROWSE1:000">
+<meta name="WINDOW" content="main">
+<meta name="KEYWORDS" content="getvar AutoLISP function">
+<meta name="KEYWORDS" content="group codes, examples of">
+<meta name="KEYWORDS" content="ASCII DXF files, HEADER section (example)">
+<meta name="KEYWORDS" content="HEADER section, example of">
+</head>
+<body>
+
+<table width="100%" cellpadding="5" cellspacing="0" border="0"><tbody><tr><td>
+<font face="Arial" color="#003399" size="3"><b> <a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/drawing_interchange_file_formats.htm">Appendix A -- Drawing Interchange File Formats</a>
+</b></font>
+<hr size="1">
+<font face="Arial" color="#003399" size="3"><b><a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/ascii_dxf_files_dxf_aa.htm"><img src="./Header Group Codes in DXF Files [DXF - DXF Reference]_files/book2.gif" border="0"> ASCII DXF Files</a> 
+</b></font><br>
+</td></tr><tr><td>
+<font face="Arial" color="#003399" size="3"><b><img src="./Header Group Codes in DXF Files [DXF - DXF Reference]_files/bk_space.gif" border="0"> <img src="./Header Group Codes in DXF Files [DXF - DXF Reference]_files/book2.gif" border="0"> Header Group Codes in DXF Files
+</b></font>
+<hr size="1">
+</td></tr></tbody></table>
+
+
+<p><font face="verdana,arial" size="2">Applications can retrieve the values of these variables with the AutoLISP <font face="Courier New,Courier"><b>getvar</b></font> function. 
+</font></p>
+
+<p><font face="verdana,arial" size="2">The following is an example of the HEADER section of a DXF file:</font></p>
+
+<table border="0" cellpadding="2" cellspacing="4"><tbody><tr valign="TOP"><td bgcolor="#F9F6ED"><p><font face="verdana,arial" size="2"><font face="Courier New,Courier">&nbsp;&nbsp;0<br>SECTION<br>&nbsp;&nbsp;2<br>HEADER</font> </font></p><font face="Courier New,Courier"><br></font></td>
+<td bgcolor="#F9F6ED"><p><font face="verdana,arial" size="2"><font face="Arial"><i>Beginning of HEADER section</i></font><font face="Arial"><i> <br><br><br></i></font></font></p><font face="Arial"><i><br></i></font></td></tr>
+<tr valign="TOP"><td bgcolor="#F9F6ED"><p><font face="verdana,arial" size="2"><font face="Courier New,Courier">&nbsp;&nbsp;9<br>$&lt;variable&gt;<br>&lt;group code&gt;<br>&lt;value&gt;</font> </font></p><font face="Courier New,Courier"><br></font></td>
+<td bgcolor="#F9F6ED"><p><font face="verdana,arial" size="2"><font face="Arial"><i>Repeats for each header variable</i></font><font face="Arial"><i> <br><br><br></i></font></font></p><font face="Arial"><i><br></i></font></td></tr>
+<tr valign="TOP"><td bgcolor="#F9F6ED"><p><font face="verdana,arial" size="2"><font face="Courier New,Courier">&nbsp;&nbsp;0<br>ENDSEC</font> </font></p><font face="Courier New,Courier"><br></font></td>
+<td bgcolor="#F9F6ED"><p><font face="verdana,arial" size="2"><font face="Arial"><i>End of HEADER section</i></font><font face="Arial"><i> <br></i></font></font></p><font face="Arial"><i><br></i></font></td></tr>
+</tbody></table>
+
+
+
+
+
+</body></html>

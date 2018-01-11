@@ -1,0 +1,104 @@
+#DELETE STUFF BELOW!!!##################################
+#OLD THINGS SUCK
+procedure main()
+#return main2("box1.dxf","output.txt")
+ReadDXF("box1.dxf","output.txt")
+end
+
+procedure ReadDXF(s,out1)
+
+       s := open(s,"r")
+       out1 := open(out1,"w")
+
+every !s ? { 
+        #while codes := s do{
+        While not ("EOF") do{
+               If codes := "0"|"SECTION" then next
+                        codes := ReadCodes() 
+                        #If codes := strSection Then 
+                                #codes := ReadCodes 
+                                While codes <> "ENDSEC" do{
+               If codes := "0" Then lastObj := codes 
+                           If lastObj := strObject Then 
+                        tmpCode := "," & codes(0) & "," 
+                        If InStr(strCodeList, tmpCode) Then 
+                       ReadDXF := ReadDXF & _ 
+             codes(0) & "=" & codes(1) & vbCrLf 
+                        End If 
+                    End If 
+                   codes := ReadCodes 
+                Wend 
+            End If 
+        Else 
+            codes := ReadCodes 
+        End If 
+    Wend 
+    #Close #1 
+}
+}
+#}
+
+End 
+
+procedure ReadCodes() 
+    
+    Line Input #1, codeStr 
+    Line Input #1, valStr 
+    
+    ReadCodes := Array(Trim(codeStr), valStr) 
+End
+
+
+####################################################################################################################
+
+#s := "this is a string"
+  #s ? {                               # Establish string #scanning environment
+      #while not pos(0) do  {          # Test for end of string
+          #tab(many(' '))              # Skip past any blanks
+          #word := tab(upto(' ') | 0)  # the next word is up to #the next blank -or- the end of the line
+         # write(word)                 # write the word
+      #}
+  #}
+
+
+
+#procedure ReadDXF()
+
+#( _ByVal dxfFile As String, ByVal strSection As String, _ 
+    #ByVal strObject As String, ByVal strCodeList As String) 
+    #Dim tmpCode, lastObj As String 
+      #Open dxfFile For Input As #1 
+       #s := open(s,"r")
+      # out1 := open(out1,"w") 
+        #codes := ReadCodes 
+       # While codes(1) <> "EOF" 
+              #  If codes(0) := "0" And codes(1) = "SECTION" Then 
+                        #codes := ReadCodes() 
+                       # If codes(1) := strSection Then 
+                                #codes := ReadCodes 
+                                #While codes(1) <> "ENDSEC" 
+              # If codes(0) := "0" Then lastObj := codes(1) 
+                          # If lastObj := strObject Then 
+                       # tmpCode := "," & codes(0) & "," 
+                        #If InStr(strCodeList, tmpCode) Then 
+                       #ReadDXF := ReadDXF & _ 
+            # codes(0) & "=" & codes(1) & vbCrLf 
+                        #End If 
+                    #End If 
+                  # codes := ReadCodes 
+                #Wend 
+            #End If 
+        #Else 
+           # codes := ReadCodes 
+        #End If 
+   # Wend 
+   # Close #1 
+#End 
+
+#procedure ReadCodes() #As Variant 
+    #Dim codeStr, valStr As String 
+   # Line Input #1, codeStr 
+    #Line Input #1, valStr 
+    
+    #ReadCodes := Array(Trim(codeStr), valStr) 
+#End

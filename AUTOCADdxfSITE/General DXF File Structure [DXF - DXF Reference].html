@@ -1,0 +1,83 @@
+
+<!-- saved from url=(0092)https://www.autodesk.com/techpubs/autocad/acad2000/dxf/general_dxf_file_structure_dxf_aa.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="MACRO" content="IF(FE(`achlp.dll&#39;),SetTopicData(`DXF; 008; dxf_aa.HSF [General_DXF_File_Structure_dxf_aa@dxf_2000.hlp]&#39;))">
+
+
+<meta name="ID" content="General_DXF_File_Structure_dxf_aa">
+<title>General DXF File Structure  [DXF - DXF Reference]</title>
+<meta name="BROWSE" content="BROWSE1:000">
+<meta name="WINDOW" content="main">
+<meta name="KEYWORDS" content="ASCII DXF files, sections of">
+<meta name="KEYWORDS" content="ASCII DXF files, structure of">
+<meta name="KEYWORDS" content="group codes, about">
+<meta name="KEYWORDS" content="SAVEAS command, Select Objects option">
+</head>
+<body>
+
+<table width="100%" cellpadding="5" cellspacing="0" border="0"><tbody><tr><td>
+<font face="Arial" color="#003399" size="3"><b> <a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/drawing_interchange_file_formats.htm">Appendix A -- Drawing Interchange File Formats</a>
+</b></font>
+<hr size="1">
+<font face="Arial" color="#003399" size="3"><b><a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/ascii_dxf_files_dxf_aa.htm"><img src="./General DXF File Structure [DXF - DXF Reference]_files/book2.gif" border="0"> ASCII DXF Files</a> 
+</b></font><br>
+</td></tr><tr><td>
+<font face="Arial" color="#003399" size="3"><b><img src="./General DXF File Structure [DXF - DXF Reference]_files/bk_space.gif" border="0"> <img src="./General DXF File Structure [DXF - DXF Reference]_files/book2.gif" border="0"> General DXF File Structure
+</b></font>
+<hr size="1">
+</td></tr></tbody></table>
+
+
+<p><font face="verdana,arial" size="2">Essentially a DXF file is composed of pairs of codes and associated values. The codes, known as <font face="Arial"><i>group codes</i></font>, indicate the type of value that follows. Using these group code and value pairs, a DXF file is organized into sections, composed of records, which are composed of a group code and a data item. Each group code and value is on its own line in the DXF file. 
+</font></p>
+<p><font face="verdana,arial" size="2">Each section starts with a group code 0 followed by the string, SECTION. This is followed by a group code 2 and a string indicating the name of the section (for example, HEADER). Each section is composed of group codes and values that define its elements. A section ends with a 0 followed by the string ENDSEC. 
+</font></p>
+<p><font face="verdana,arial" size="2">It may be helpful to produce a DXF file from a small drawing, print it out, and refer to it while reading the information presented in this section.
+</font></p>
+<p><font face="verdana,arial" size="2">The overall organization of a DXF file is as follows:
+</font></p>
+<meta name="KEYWORDS" content="HEADER section, about">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2"><font face="Arial"><i>HEADER section.</i></font> Contains general information about the drawing. It consists of an AutoCAD database version number and a number of system variables. Each parameter contains a variable name and its associated value.
+</font>
+</li></ul> <meta name="KEYWORDS" content="CLASSES section, about">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2"><font face="Arial"><i>CLASSES section</i></font>. Holds the information for application-defined classes, whose instances appear in the BLOCKS, ENTITIES, and OBJECTS sections of the database. A class definition is permanently fixed in class hierarchy.
+</font>
+</li></ul> <meta name="KEYWORDS" content="TABLES section, about">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2"><font face="Arial"><i>TABLES section.</i></font> Contains definitions for the following symbol tables. 
+</font>
+</li></ul> <ul><font face="verdana,arial" size="2">APPID (application identification table)</font></ul>
+<ul><font face="verdana,arial" size="2">BLOCK_RECORD (block reference table)</font></ul>
+<ul><font face="verdana,arial" size="2">DIMSTYLE (dimension style table)</font></ul>
+<ul><font face="verdana,arial" size="2">LAYER (layer table)</font></ul>
+<ul><font face="verdana,arial" size="2">LTYPE (linetype table)</font></ul>
+<ul><font face="verdana,arial" size="2">STYLE (text style table)</font></ul>
+<ul><font face="verdana,arial" size="2">UCS (User Coordinate System table)</font></ul>
+<ul><font face="verdana,arial" size="2">VIEW (view table)</font></ul>
+<ul><font face="verdana,arial" size="2">VPORT (viewport configuration table)</font></ul>
+<meta name="KEYWORDS" content="BLOCKS section, about">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2"><font face="Arial"><i>BLOCKS section.</i></font> Contains block definition and drawing entities that make up each block reference in the drawing.
+</font>
+</li></ul> <meta name="KEYWORDS" content="ENTITIES section, about">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2"><font face="Arial"><i>ENTITIES section.</i></font> Contains the graphical objects (entities) in the drawing, including block references (insert entities).
+</font>
+</li></ul> <meta name="KEYWORDS" content="OBJECTS section, about">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2"><font face="Arial"><i>OBJECTS section.</i></font> Contains the nongraphical objects in the drawing. All objects that are not entities or symbol table records or symbol tables are stored in this section. Examples of entries in the OBJECTS section are dictionaries that contain mline styles and groups. 
+</font>
+</li></ul> <meta name="KEYWORDS" content="THUMBNAIL section, about">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2"><font face="Arial"><i>THUMBNAILIMAGE section.</i></font> Contains the preview image data for of the drawing. This section is optional.
+</font>
+</li></ul> <meta name="KEYWORDS" content="SAVE command, Select Objects option">
+
+<p><font face="verdana,arial" size="2">If you use the Select Objects option of the SAVE and SAVEAS commands, the resulting DXF file contains only the ENTITIES section and the EOF marker. The ENTITIES section contains only the objects you select for output. If you select an insert entity, the corresponding block definition is not included in the output file.
+</font></p>
+
+
+
+
+</body></html>

@@ -1,0 +1,164 @@
+
+<!-- saved from url=(0084)https://www.autodesk.com/techpubs/autocad/acad2000/dxf/writing_a_dxf_file_dxf_aa.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="MACRO" content="IF(FE(`achlp.dll&#39;),SetTopicData(`DXF; 008; dxf_aa.HSF [Writing_a_DXF_File_dxf_aa@dxf_2000.hlp]&#39;))">
+
+
+<meta name="ID" content="Writing_a_DXF_File_dxf_aa">
+<title>Writing a DXF File  [DXF - DXF Reference]</title>
+<meta name="BROWSE" content="BROWSE1:000">
+<meta name="WINDOW" content="main">
+<meta name="KEYWORDS" content="ASCII DXF files, writing (example)">
+<meta name="KEYWORDS" content="writing a DXF file (example)">
+<meta name="KEYWORDS" content="HEADER section, and writing a DXF file">
+<meta name="KEYWORDS" content="DXFIN considerations for writing DXF files">
+</head>
+<body>
+
+<table width="100%" cellpadding="5" cellspacing="0" border="0"><tbody><tr><td>
+<font face="Arial" color="#003399" size="3"><b> <a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/drawing_interchange_file_formats.htm">Appendix A -- Drawing Interchange File Formats</a>
+</b></font>
+<hr size="1">
+<font face="Arial" color="#003399" size="3"><b><a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/ascii_dxf_files_dxf_aa.htm"><img src="./Writing a DXF File [DXF - DXF Reference]_files/book2.gif" border="0"> ASCII DXF Files</a> 
+</b></font><br>
+</td></tr><tr><td>
+<font face="Arial" color="#003399" size="3"><b><a href="https://www.autodesk.com/techpubs/autocad/acad2000/dxf/writing_a_dxf_interface_program_dxf_aa.htm"><img src="./Writing a DXF File [DXF - DXF Reference]_files/bk_space.gif" border="0"> <img src="./Writing a DXF File [DXF - DXF Reference]_files/book2.gif" border="0"> Writing a DXF Interface Program</a> 
+</b></font><br>
+</td></tr><tr><td>
+<font face="Arial" color="#003399" size="3"><b><img src="./Writing a DXF File [DXF - DXF Reference]_files/bk_space.gif" border="0"> <img src="./Writing a DXF File [DXF - DXF Reference]_files/bk_space.gif" border="0"> <img src="./Writing a DXF File [DXF - DXF Reference]_files/book2.gif" border="0"> Writing a DXF File
+</b></font>
+<hr size="1">
+</td></tr></tbody></table>
+
+
+<p><font face="verdana,arial" size="2">Writing a program that creates a DXF file can be more difficult than one that reads a DXF file, because you must maintain consistency within the drawing in order for AutoCAD to find the file acceptable. AutoCAD lets you omit many items in a DXF file and still obtain a usable drawing. 
+</font></p>
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2">The entire HEADER section can be omitted if you don't set header variables. 
+</font>
+</li></ul> <meta name="KEYWORDS" content="TABLES section, and writing a DXF file">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2">Any of the tables in the TABLES section can be omitted if you don't need to make entries, and the entire TABLES section can be dropped if nothing in it is required. 
+</font>
+<font face="verdana,arial" size="2"></font></li><li><font face="verdana,arial" size="2">If you define any linetypes in the LTYPE table, this table must appear before the LAYER table. 
+</font>
+</li></ul> <meta name="KEYWORDS" content="BLOCKS section, and writing a DXF file">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2">If no block definitions are used in the drawing, the BLOCKS section can be omitted. 
+</font>
+<font face="verdana,arial" size="2"></font></li><li><font face="verdana,arial" size="2">If present, the BLOCKS section must appear before the ENTITIES section.
+</font>
+</li></ul> <meta name="KEYWORDS" content="ENTITIES section, and writing a DXF file">
+
+<font face="verdana,arial" size="2"></font><ul type="square"><font face="verdana,arial" size="2"></font><li><font face="verdana,arial" size="2">Within the ENTITIES section, you can reference layer names even though you haven't defined them in the LAYER table. Such layers are automatically created with color 7 and the CONTINUOUS linetype. 
+</font>
+<font face="verdana,arial" size="2"></font></li><li><font face="verdana,arial" size="2">The EOF item must be present at the end of file.
+</font>
+</li></ul> <meta name="KEYWORDS" content="Visual Basic programs (examples), for writing a DXF file">
+<meta name="KEYWORDS" content="Visual Basic programs (examples), for writing a DXF file">
+
+<p><font face="verdana,arial" size="2">The following Visual Basic subroutine constructs a DXF file representing a polygon. 
+</font></p>
+<font face="Courier New,Courier" size="2">' WriteDXFPolygon creates a minimal DXF file that only contains
+</font><br>
+<font face="Courier New,Courier" size="2">' the ENTITIES section. This subroutine requires five parameters,
+</font><br>
+<font face="Courier New,Courier" size="2">' the DXF file name, the number of sides for the polygon, the X
+</font><br>
+<font face="Courier New,Courier" size="2">' and Y coordinates for the bottom end of the right-most side
+</font><br>
+<font face="Courier New,Courier" size="2">' (it starts in a vertical direction), and the length for each
+</font><br>
+<font face="Courier New,Courier" size="2">' side. Note that because this only requests 2D points, it does
+</font><br>
+<font face="Courier New,Courier" size="2">' not include the Z coordinates (codes 30 and 31). The lines are
+</font><br>
+<font face="Courier New,Courier" size="2">' placed on the layer "Polygon."
+</font><br>
+<font face="Courier New,Courier" size="2">'
+</font><br>
+<font face="Courier New,Courier" size="2">Sub WriteDXFPolygon( _
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dxfFile As String, iSides As Integer, _
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dblX As Double, dblY As Double, dblLen As Double)
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Dim i As Integer
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Dim dblA1, dblA, dblPI, dblNX, dblNY As Double
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Open dxfFile For Output As #1
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 0
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Print #1, "SECTION"
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 2
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Print #1, "ENTITIES"
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;dblPI = Atn(1) * 4
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;dblA1 = (2 * dblPI) / iSides
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;dblA = dblPI / 2
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;For i = 1 To iSides
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 0
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, "LINE"
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 8
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, "Polygon"
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 10
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, dblX
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 20
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, dblY
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dblNX = dblLen * Cos(dblA) + dblX
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dblNY = dblLen * Sin(dblA) + dblY
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 11
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, dblNX
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 21
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print #1, dblNY
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dblX = dblNX
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dblY = dblNY
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dblA = dblA + dblA1
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Next i
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 0
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Print #1, "ENDSEC"
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Print #1, 0
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Print #1, "EOF"
+</font><br>
+<font face="Courier New,Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;Close #1
+</font><br>
+<p><font face="Courier New,Courier" size="2">End Sub
+</font></p>
+
+<p><font face="verdana,arial" size="2">As long as a properly formatted item appears on the line on which the data is expected, DXFIN accepts it. (Of course, string items should not have leading spaces unless these are intended to be part of the string.) This BASIC program takes advantage of this flexibility in input format and does not generate a file exactly like one generated by AutoCAD.
+</font></p>
+<p><font face="verdana,arial" size="2">In the case of an error in using DXFIN to load, AutoCAD reports the error with a message indicating the nature of the error and the last line processed in the DXF file before the error was detected. This may not be the line on which the error occurred, especially in the case of errors such as the omission of required groups. 
+</font></p>
+
+
+
+
+</body></html>
