@@ -1310,22 +1310,32 @@ return()
 end
 
 ##############################################
+#RGINT entries
+##############################################
 
-procedure ge01(at)
+procedure tt0001(at)
 
-(ax := at[1],bx := at[2],cx := at[3])
-#(dx := at[4],ex := at[5],fx := at[6])
-#(gx := at[7],hx := at[8],ix := at[9])
-#(jx := at[10],jq := at[11])
+(ax := at[1],bx := at[2],cx := at[3],dx := at[4],ex := at[5])
 
-#c := colorTable(jq)
-
-x := (ax||bx||cx) 
-#y := (dx||ex||fx) 
-#z := (gx||hx||ix) 
-#s := jx
+att := (ax||bx||cx||dx||ex) 
 
 #cube01(at)
+gcode0001(att)
+
+return()
+
+end
+
+##############################################
+
+procedure tt0002(at)
+
+(ax := at[1],bx := at[2],cx := at[3],dx := at[4],ex := at[5])
+
+att := (ax||bx||cx||dx||ex) 
+
+#cube01(at)
+gcode0002(att)
 
 return()
 
@@ -1333,23 +1343,37 @@ end
 
 ######################################################
 
-procedure gcode()
-main3x("input.txt","output.txt")
+procedure gcode0001(att)
+#gcodeenter0001(att)
 end
 
-procedure main3x(s,out1)
+procedure gcode0002(att)
+#gcodeenter0002(att)
+end
 
-ge01(x001)
+#####################################################
 
+#procedure gcode()
+#main3x("output.txt")
+#end
+#procedure main3x(out1)
 
-s := open(s,"r")
-out1 := open(out1,"w") 
+procedure gcode()
+
+gcode0001(t001)
+gcode0002(t002)
+
+#tt0001(at)
+#at := t001
+
+#s := open(s,"r")
+#out1 := open(out1,"w") 
 
 write(out1,"%")
 write(out1,"N1(DFS,P1,)")
-write(out1,"N2 ( PART NAME=box4 )")
+write(out1,"N2 ( PART NAME=",t001,")")
 write(out1,"N3 ( MACHINE=L2503 LASER CAT )")
-write(out1,"N4 ( X SHEET WIDTH=100.1969 )")
+write(out1,"N4 ( X SHEET WIDTH=",t002,")")
 write(out1,"N5 ( Y SHEET HEIGHT=60.0394 )")
 write(out1,"N6 ( MATERIAL=Teksoft English Defaults )")
 write(out1,"N7 ( THICKNESS=.048 )")
@@ -1357,7 +1381,7 @@ write(out1,"/N8Q20")
 write(out1,"N9G801[2122001]")
 write(out1,"/N10G60X0Y0 (ENTER ZERO OFFSET)")
 write(out1,"N11G24L12")
-write(out1,"N12G00X",x001,"Y",y001)
+#write(out1,"N12G00X",x001,"")
 write(out1,"N13Q23")
 #write(out1,"N14X",x002)#test to here
 write(out1,"N15Q23")
@@ -1428,22 +1452,24 @@ write(out1,"/N79G00X0")
 write(out1,"N80M30")
 write(out1,"%")
 
-return
+  #entry(out1)
 
-  # entry(out1,ml)
-                                               
+     return
+
+    #WWrite(out1)
+                                         
 end
 
-procedure entry(out1,data)
+#procedure entry(out1,data)
 
-   V := []
-   data ? while ( tab(upto('<')), put(V,tab(upto('>')+1)) )
-   every writes(v := !V) do 
-      data := replace(data,v,read())
+   #V := []
+   #data ? while ( tab(upto('<')), put(V,tab(upto('>')+1)) )
+  # every writes(v := !V) do 
+     # data := replace(data,v,read())
   # write(out1,"\nresult follows:\n",data)
-WWrite(out1,"\nresult follows:\n",data)
+#WWrite(out1,"\nresult follows:\n",data)
   
-end
+#end
 
 
 
