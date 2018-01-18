@@ -513,11 +513,11 @@ class U3DViewer : Dialog(view_model3d, mFile, miLoadModel, miQuit,
   ##############################################################
 
    method on_editable_text_list_3(ev)
-   tt0001(part_name.get_contents())
+   #tt0001(part_name.get_contents())
    end
 
    method on_text_button_16(ev)
-   every write(!editable_text_list_3.get_contents())
+   #every write(!editable_text_list_3.get_contents())
    gcode(!editable_text_list_3.get_contents())
    end
 
