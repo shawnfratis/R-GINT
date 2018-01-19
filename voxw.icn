@@ -821,72 +821,25 @@ end
 
 ##################################################
 
-#procedure gcode(xxx)
-#main3(xxx,"output.txt")
-#end
-
-#procedure main3(s,out1)
-#q := s
-#s := open(s,"r")
-#out1 := open(out1,"w") 
-   
-#entry(out1,q)
-                                            
-#end
-
-#procedure entry(out1,data)
-      #write(data)
-
-      
-   #V := []
-   #data ? while ( tab(upto('<')), put(V,tab(upto('>')+1)) )
-   
-   #every writes(v := !set(V)," : ") do 
-    
-      #data := replace(data,v,read())
-   #write(out1,"\nresult follows:\n",data)
-
-   #write(out1,read(qz))
-   
-#end
-
-###############################################################
-
-procedure gcode(xx)
-main3("input.txt","output.txt",xx)
+procedure write_out_notes (filename)
+  file := open (filename, "rt") | stop ("no notes file yet")
+  every write (!file)
 end
-
-procedure main3(s,out1,xx)
-
-s := open(s,"r")
-out1 := open(out1,"w") 
-
-ml := xx
-write(xx)
-  # entry(out1,ml)
-
-# write(out1,read(xx))
-                                               
+ 
+procedure add_to_notes (filename, strs)
+  file := open (filename, "at")  | # append to file if it exists
+          open (filename, "cat") | # create the file if not there
+          stop ("unable to open " || filename)
+  writes (file)
+  every writes (file, !strs || "")
+  write (file, "")
 end
-
-procedure entry(out1,data)
-
- write(data)
-
-V := []
-   data ? while ( tab(upto('')), put(V,tab(upto('')+1)) )
-   every writes(v := !V) do 
-      data := replace(data,v,read())
-   write(out1,"\nresult Y follows:\n",data)
-
-
-   #V := []
-   #data ? while ( tab(upto('<')), put(V,tab(upto('>')+1)) )
-   #every writes(v := !V) do 
-     # data := replace(data,v,read())
-  # write(out1,"\nresult follows:\n",data)
+ 
+procedure gcode(args)
+  notes_file := "output.txt"
+  if *args = 0 
+    then write_out_notes (notes_file)
+    else add_to_notes (notes_file, args)
 end
-
-
 
 
