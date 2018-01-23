@@ -1,0 +1,113 @@
+procedure main()
+
+
+    binary := open("input.txt","r") 
+    
+#while line := read(binary)
+#write(line) 
+#close(binary)
+
+
+   namechars := &letters ++ &digits ++ ' -&'
+
+   tartans_list := []
+
+   binary := ""
+
+   while binary ||:= reads(, 10000)	do{	# read the whole file
+
+   #  Get names.
+
+   binary ? {
+      tab(find("FSWI") + 4)			# find names
+      while tab(upto(namechars)) do {		# not robust
+         name := tab(many(namechars))
+         if (*name > 3) | (name == "Op") then	# "heuristic"
+            put(tartans_list, name)
+         tab(upto(namechars)) | break
+         tab(many(namechars))
+         }
+      }
+}
+
+     end
+
+#############################################################
+
+     procedure mainzzzz()
+#procedure main(args)
+   #local hex, tieup, i, binary, expr, name, namechars, tartans_list
+
+    binary := open("input.txt","r") 
+    
+#while line := read(binary)
+#write(line) 
+#close(binary)
+
+
+   namechars := &letters ++ &digits ++ ' -&'
+
+   tartans_list := []
+
+   binary := ""
+
+   while binary ||:= reads(, 10000)		# read the whole file
+
+   #  Get names.
+
+   binary ? {
+      tab(find("FSWI") + 4)			# find names
+      while tab(upto(namechars)) do {		# not robust
+         name := tab(many(namechars))
+         if (*name > 3) | (name == "Op") then	# "heuristic"
+            put(tartans_list, name)
+         tab(upto(namechars)) | break
+         tab(many(namechars))
+         }
+      }
+
+
+     end
+
+
+procedure main()
+
+f := open("input.txt","rw") | stop("cannot open file ",fn)
+while line := read(f)
+write(line) 
+close(f)
+
+    #f := dxf_list
+
+    #binary := open("input.txt","rw")
+    #while read(binary)
+    #write(binary) 
+    
+   #namechars := &letters ++ &digits ++ ' -&'
+
+   f := []
+
+   every write(!f)
+
+   #binary := ""
+
+   #while binary ||:= reads(, 10000)	do{	
+
+    #binary ? {
+     # tab(find("FSWI") + 4)			
+      #while tab(upto(namechars)) do {		
+       #  name := tab(many(namechars))
+        # if (*name > 3) | (name == "Op") then	
+           # put(tartans_list, name)
+        # tab(upto(namechars)) | break
+        # tab(many(namechars))
+        # }
+     # }
+#}
+
+     end
+
+
+
+
+    

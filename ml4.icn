@@ -1,0 +1,45 @@
+     procedure main()
+
+f := open("input.txt","rw") | stop("cannot open file ",fn)
+#while line := read(f)
+#write(line) 
+#close(f)
+
+    #binary := open("input.txt","r") 
+    
+#while line := read(binary)
+#write(line) 
+#close(binary)
+
+   namechars := &letters ++ &digits ++ ' -&'
+   #namechars := POINT
+
+   tartans_list := []
+
+   #f := ""
+
+   #while f := ||reads(, 100)	#do{	# read the whole file
+   while x := reads(f)	#do{	# read the whole file
+
+   #  Get names.
+
+   x ? {
+      tab(find("ENTITIES") + 2)			# find names
+      while tab(upto(namechars)) do {		# not robust
+         name := tab(many(namechars))
+         if (*name > 3) | (name == "Op") then	# "heuristic"
+            put(tartans_list, name)
+         tab(upto(namechars)) | break
+         tab(many(namechars))
+         }
+      }
+#}
+
+write(!tartans_list)
+write(x)
+
+     end
+
+
+
+    
