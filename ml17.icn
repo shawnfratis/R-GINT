@@ -1,0 +1,108 @@
+link lists
+
+procedure main() 
+   removelines("input.txt")
+  #main2(i)
+end
+ 
+procedure removelines(fn)
+
+   f := open(fn,"r") | read(f)                  
+   every put(F := [],|read(f))
+
+haystack := F
+
+every needle := !["ENTITIES"] do {                                         
+ 
+   if i := lindex(haystack,needle) then {                                           
+      write("needle=",needle, " is at position ",i," in haystack.")                
+           }
+         }
+    main2(i)
+   end
+
+procedure last(p,arglist)               
+local i
+every i := p!arglist
+return \i
+end  
+
+procedure lindex(lst, x)		
+   local i
+    every i := 1 to *lst do
+      if lst[i] === x then suspend i
+ 
+end 
+
+#########################################################
+
+procedure main2(i) 
+   removelines2("input.txt",1,i) | stop("Failed to remove lines.")
+   main3()
+end
+ 
+procedure removelines2(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   out := open("output.txt","w") | stop("Unable to open ",out)
+
+   every put(F := [],|read(f))               
+   close(f)
+ 
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+ 
+   f := open(fn,"rw") | fail                  
+   every write(\!F)
+   #write(out,read(ll))              
+   every write(out,\!F)             
+   close(out)
+   return 
+  end
+
+  procedure main3() 
+   removelines3("output.txt",0,0) | stop("Failed to remove lines.")
+   return
+end
+ 
+procedure removelines3(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   every put(F := [],|read(f))               
+   #close(f)
+ 
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+    
+   ff := open(fn,"w") | fail                  
+   every write(\!F)                         
+   #close(f)
+   
+   qq1 := F[8]
+   write(qq1)
+   qq2 := F[10]
+   write(qq2)
+   qq3 := F[20]
+   write(qq3)
+   qq4 := F[22]
+   write(qq4)
+   
+   #qq5 := F[33]
+   #write(qq5)
+   #qq6 := F[35]
+   #write(qq6)
+   #qq7 := F[45]
+   #write(qq7)
+   #qq8 := F[47]
+   #write(qq8)
+
+  return
+  
+end
+
+##############################################################
+
+
+
+
+    
