@@ -756,6 +756,22 @@ end
 
 ######################################################
 
+procedure dxfin(at)
+
+(ax := at[1],bx := at[2],cx := at[3],dx := at[4],ex := at[5])
+(fx := at[6],gx := at[7],hx := at[8])
+
+at := (ax||bx||cx||dx||ex||fx||gx||hx)
+ 
+cube02(at)
+#gcode(att,axt)
+
+return()
+
+end
+
+######################################################
+
 #procedure gcode(att)
 #gcode2("output.txt")
 #end
@@ -894,5 +910,6 @@ procedure gcode(args)
     then write_out_notes (notes_file)
     else add_to_notes (notes_file, args)
 end
+
 
 

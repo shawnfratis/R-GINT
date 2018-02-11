@@ -1,0 +1,197 @@
+link lists
+link printf
+
+procedure dxfmain(aa)
+
+out := open("input.txt","w")
+	every l := !aa do {
+		write(out,l)
+}
+return()
+end
+
+#############################################
+
+procedure mainqq()
+removelines("input.txt")
+end
+ 
+procedure removelines(fn)
+
+   f := open(fn,"r") | read(f)                  
+   every put(F := [],|read(f))
+
+haystack := F
+
+every needle := !["ENTITIES"] do {                                         
+ 
+   if i := lindex(haystack,needle) then {                                           
+      write("needle=",needle, " is at position ",i," in haystack.")                
+           }
+         }
+    main2q(i)
+   end
+
+procedure last(p,arglist)               
+local i
+every i := p!arglist
+return \i
+end  
+
+procedure lindex(lst, x)		
+   local i
+    every i := 1 to *lst do
+      if lst[i] === x then suspend i
+ 
+end 
+
+#########################################################
+
+procedure main2q(i) 
+   removelines2("input.txt",1,i) | stop("Failed to remove lines.")
+   main3()
+end
+ 
+procedure removelines2(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   out := open("output.txt","w") | stop("Unable to open ",out)
+
+   every put(F := [],|read(f))               
+   close(f)
+ 
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+ 
+   f := open(fn,"rw") | fail                  
+   every write(\!F)
+   every write(out,\!F)             
+   close(out)
+   return 
+  end
+
+#########################################################
+
+  procedure main3() 
+   removelines3("output.txt",0,0) | stop("Failed to remove lines.")
+   return
+end
+ 
+procedure removelines3(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   every put(F := [],|read(f))               
+   
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+    
+   ff := open(fn,"w") | fail                  
+   every write(\!F)                         
+      
+   qq1 := F[8]|0
+   write(qq1)
+   qq2 := F[10]|0
+   write(qq2)
+
+   qq3 := F[20]|0
+   write(qq3)
+   qq4 := F[22]|0
+   write(qq4)
+   
+   qq5 := F[32]|0
+   write(qq5)
+   qq6 := F[34]|0
+   write(qq6)
+
+   qq7 := F[44]|0
+   write(qq7)
+   qq8 := F[46]|0
+   write(qq8)
+
+   qq9 := F[56]|0
+   write(qq9)
+   qq10 := F[58]|0
+   write(qq10)
+ 
+
+ml := ("%
+N1(DFS,P1,)
+N2 ( PART NAME=box4 )
+N3 ( MACHINE=L2503 LASER CAT )
+N4 ( X SHEET WIDTH=100.1969 )
+N5 ( Y SHEET HEIGHT=60.0394 )
+N6 ( MATERIAL=Teksoft English Defaults )
+N7 ( THICKNESS=.048 )
+/N8Q20
+N9G801[2122001]
+/N10G60X0Y0 (ENTER ZERO OFFSET)
+N11G24L12
+N12G00X",F[8],"Y",F[10]
+N13Q23
+N14X",F[20],"Y",F[22]
+N15Q23
+N16X",F[32],"Y",F[34]
+N17Q23
+N18X",F[44],"Y",F[46])
+N19Q23
+N20Y10.839
+N21Q23
+N22Y14.921
+N23Q23
+N24Y18.996
+N25Q23
+N26X2.261Y20.878
+N27Q23
+N28X6.772
+N29Q23
+N30X10.839
+N31Q23
+N32X14.921
+N33Q23
+N34X19.432
+N35Q23
+N36X20.878Y18.996
+N37Q23")
+
+
+#ml := "% \n_
+#N1(DFS,P1,) \n_
+#N2 ( PART NAME=<PART NAME> ) \n_
+#N3 ( MACHINE=L2503 LASER CAT ) \n_
+#N4 ( X SHEET WIDTH=<X W>) \n_
+#N5 ( Y SHEET HEIGHT=<Y W>) \n_
+#N6 ( MATERIAL=Teksoft English Defaults ) \n_
+#N7 ( THICKNESS=.048 ) \n_
+#/N8Q20 \n_
+#N9G801[2122001] \n_
+#/N10G60X0Y0 (ENTER ZERO OFFSET) \n_
+#N11G24L12 \n_
+#N12G00<x012> \n_
+#N13Q23 \n_
+
+   #entry(out1,ml)
+
+
+out := open("output.txt","w")
+	every l := !ml do {
+		write(out,l)
+}
+return()
+                                               
+end
+
+procedure entry(out1,data)
+
+   V := []
+   data ? while ( tab(upto('<')), put(V,tab(upto('>')+1)) )
+   every writes(v := !V) do 
+      data := replace(data,v,read())
+   write(out1,"\nresult follows:\n",data)
+end
+
+
+
+
+
+
+    
