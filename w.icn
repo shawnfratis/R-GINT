@@ -1,6 +1,6 @@
-#fg3dLite 2017 FratisGraphics
+#r-gint 2018 FratisGraphics
 
-#Program to utilize Unicons 3D capabilities.
+#G-code generator/converter/interpreter/visualizer.
 
 #Some of this code is from the University of Arizona and Rosetta Code. Please contact me if you would like specifics of this.
 #shawnfratis@gmail.com

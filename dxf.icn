@@ -1,3 +1,17 @@
+#r-gint 2018 FratisGraphics
+
+#G-code generator/converter/interpreter/visualizer.
+
+#Some of this code is from the University of Arizona and Rosetta Code. Please contact me if you would like specifics of this.
+#shawnfratis@gmail.com
+
+#Integrated with Jafar Al-Gharaibeh's Unicon 3D viewer.
+
+#Made in Unicon, with Unicon IDE
+#unicon.sourceforge.net
+
+#################################################
+
 link lists
 link printf
 
@@ -21,12 +35,12 @@ procedure removelines(fn)
    f := open(fn,"r") | read(f)                  
    every put(F := [],|read(f))
 
-haystack := F
+hstck := F
 
-every needle := !["ENTITIES"] do {                                         
+every ndle := !["ENTITIES"] do {                                         
  
-   if i := lindex(haystack,needle) then {                                           
-      write("needle=",needle, " is at position ",i," in haystack.")                
+   if i := lindex(hstck,ndle) then {                                           
+      write("item =",ndle, " is at position ",i," in list.")                
            }
          }
     main2q(i)
@@ -202,53 +216,7 @@ write(out1,"%")
 return
 
 end
- 
 
- 
-
-#ml := ("% \n_
-#N1(DFS,P1,) \n_
-#N2 ( PART NAME=box4 ) \n_
-#N3 ( MACHINE=L2503 LASER CAT ) \n_
-#N4 ( X SHEET WIDTH=100.1969 ) \n_
-#N5 ( Y SHEET HEIGHT=60.0394 ) \n_
-#N6 ( MATERIAL=Teksoft English Defaults ) \n_
-#N7 ( THICKNESS=.048 ) \n_
-#/N8Q20 \n_
-#N9G801[2122001] \n_
-#/N10G60X0Y0 (ENTER ZERO OFFSET) \n_
-#N11G24L12 \n_
-#N12G00X",F[8],"Y",F[10]," \n_
-#N13Q23 \n_
-#N14X",F[20],"Y",F[22]," \n_
-#N15Q23 \n_
-#N16X",F[32],"Y",F[34]," \n_
-#N17Q23 \n_
-#N18X",F[44],"Y",F[46]," \n_
-#N19Q23 \n_
-#N20Y10.839 \n_
-#N21Q23 \n_
-#N22Y14.921")
-
-
-#dxfout(ml)
-#out := open("output.txt","w")
-#every write(out(read(ml)))
-#every l := !ml do {
-#write(out,l)
-#}
-#return()
-                                               
-#end
-
-procedure dxfout(aa)
-
-out := open("output.txt","w")
-	every l := !aa do {
-		write(out,l)
-}
-return()
-end
 
 
 

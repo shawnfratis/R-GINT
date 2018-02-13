@@ -1,0 +1,260 @@
+#r-gint 2018 FratisGraphics
+
+#G-code generator/converter/interpreter/visualizer.
+
+#Some of this code is from the University of Arizona and Rosetta Code. Please contact me if you would like specifics of this.
+#shawnfratis@gmail.com
+
+#Integrated with Jafar Al-Gharaibeh's Unicon 3D viewer.
+
+#Made in Unicon, with Unicon IDE
+#unicon.sourceforge.net
+
+#################################################
+
+link lists
+link printf
+
+procedure cv1main(aa)
+
+out := open("input.txt","w")
+	every l := !aa do {
+		write(out,l)
+}
+return()
+end
+
+#############################################
+
+procedure mainqqq()
+removelines("input.txt")
+end
+ 
+procedure removelines(fn)
+
+   f := open(fn,"r") | read(f)                  
+   every put(F := [],|read(f))
+
+hstck := F
+
+every ndle := !["/N10G60X0Y0 (ENTER ZERO OFFSET)"] do {                                         
+ 
+   if i := lindex(hstck,ndle) then {                                           
+      write("item =",ndle, " is at position ",i," in list.")                
+           }
+         }
+    main2qq(i)
+   end
+
+procedure last(p,arglist)               
+local i
+every i := p!arglist
+return \i
+end  
+
+procedure lindex(lst, x)		
+   local i
+    every i := 1 to *lst do
+      if lst[i] === x then suspend i
+ 
+end 
+
+#########################################################
+
+procedure main2qq(i) 
+   removelines22("input.txt",1,i) | stop("Failed to remove lines.")
+   main33()
+end
+ 
+procedure removelines22(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   out := open("output.txt","w") | stop("Unable to open ",out)
+
+   every put(F := [],|read(f))               
+   close(f)
+ 
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+ 
+   f := open(fn,"rw") | fail                  
+   every write(\!F)
+   every write(out,\!F)             
+   close(out)
+   return 
+  end
+
+#########################################################
+
+  procedure main33() 
+   removelines33("output.txt",0,0) | stop("Failed to remove lines.")
+   return
+end
+ 
+procedure removelines33(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   every put(F := [],|read(f))               
+   
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+    
+   ff := open(fn,"w") | fail                  
+   every write(\!F)                         
+      
+   qq1 := F[2]|0
+   write(qq1)
+   qq2 := F[4]|0
+   write(qq2)
+
+   qq3 := F[6]|0
+   write(qq3)
+   qq4 := F[8]|0
+   write(qq4)
+   
+   qq5 := F[10]|0
+   write(qq5)
+   qq6 := F[12]|0
+   write(qq6)
+
+   qq7 := F[14]|0
+   write(qq7)
+   qq8 := F[16]|0
+   write(qq8)
+
+   qq9 := F[18]|0
+   write(qq9)
+   qq10 := F[20]|0
+   write(qq10)
+
+
+out1 := open("output.txt","w")
+
+write(out1,"BD")
+write(out1,"SET_INCH")
+write(out1,"C")
+write(out1,"BEGIN_EINRICHTEPLAN_INFO")
+write(out1,"C")
+write(out1,"ZA,MM,2")
+write(out1,"MM,AT,1, 60,1,1,,,,,T")
+write(out1,"MM,AT,1,170,1,1,,,,,T")
+write(out1,"ZA,DA,1")
+write(out1,"C")
+write(out1,"DA,05301,1")
+write(out1,"C")
+write(out1,"ENDE_EINRICHTEPLAN_INFO")
+write(out1,"C")
+write(out1,"BEGIN_SHEET_TECH")
+write(out1,"C")
+write(out1,"ZA,MM,6")
+write(out1,"MM,AT,1, 10,1,1,,,,,T")
+write(out1,"MM,AT,1, 20,1,1,,,,'in',Z")
+write(out1,"MM,AT,1, 30,1,1,,,,'in',Z")
+write(out1,"MM,AT,1, 40,1,1,,,,'in',Z")
+write(out1,"MM,AT,1,220,1,1,,,,'in',Z")
+write(out1,"MM,AT,1,230,1,1,,,,'in',Z")
+write(out1,"C")
+write(out1,"ZA,DA,1")
+write(out1,"DA,'SHT-1',53.000,24.000,0.048,53.000,24.000")
+write(out1,"C")
+write(out1,"ENDE_SHEET_TECH")
+write(out1,"C")
+write(out1,"BEGIN_SHEET_LOAD")
+write(out1,"C")
+write(out1,"ZA,MM,10")
+write(out1,"MM,AT,1, 10,1,1,,,,,T")
+write(out1,"MM,AT,1,500,1,1,,,,,Z")
+write(out1,"MM,AT,1,620,1,1,,,,,Z")
+write(out1,"MM,AT,1,630,1,1,,,,,Z")
+write(out1,"MM,AT,1,640,1,1,,,,'in',Z")
+write(out1,"MM,AT,1,650,1,1,,,,'in',Z")
+write(out1,"MM,AT,1,660,1,1,,,,'Bool',Z")
+write(out1,"MM,AT,1,690,1,1,,,,,Z")
+write(out1,"MM,AT,1,700,1,1,,,,,Z")
+write(out1,"MM,AT,1,710,1,1,,,,,Z")
+write(out1,"C")
+write(out1,"ZA,DA,1")
+write(out1,"DA,'SHL-1',1,1,0,2.0,2.0,1,1,1,1")
+write(out1,"C")
+write(out1,"ENDE_SHEET_LOAD")
+write(out1,"C")
+write(out1,"BEGIN_LTT_CALLS")
+write(out1,"C")
+write(out1,"ZA,MM,1")
+write(out1,"MM,AT,1, 10,1,1,,,,,T")
+write(out1,"C")
+write(out1,"ZA,DA,1")
+write(out1,"DA,'21425'")
+write(out1,"C")
+write(out1,"ENDE_LTT_CALLS")
+write(out1,"C")
+write(out1,"BEGIN_PROGRAMM")
+write(out1,"C")
+write(out1,"ZA,MM,4")
+write(out1,"MM,AT,1, 10,1,1,,,,,T")
+write(out1,"MM,AT,1, 20,1,1,,,,,T")
+write(out1,"MM,AT,1, 30,1,1,,,,,T")
+write(out1,"MM,AT,1, 40,1,1,,,,,Z")
+write(out1,"C")
+write(out1,"ZA,DA,2")
+write(out1,"DA,'LC105301','UP',,")
+write(out1,"START_TEXT")
+write(out1,"N10; (5301)")
+write(out1,"N20 edit me! ") # MSG("SUB-PROGRAM NO., P1005301")")#MUST EDIT TO PRINT CORRECTLY OR 840 D WILL CRASH-SEE CODE	#fix "
+write(out1,"N30 G90")
+write(out1,"N40")
+write(out1,"N50 G01 X",F[2]," Y",F[4])
+write(out1,"N60TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N70 G03 I-0.0150")
+write(out1,"N80TC_LASER_OFF(3)")
+write(out1,"N90 G01 X3.287")
+write(out1,"N100TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N110 G03 I-0.0150")
+write(out1,"N120TC_LASER_OFF(3)")
+write(out1,"N130 G01 X1.406 Y3.287")
+write(out1,"N140TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N150 G03 I-0.0150")
+write(out1,"N160TC_LASER_OFF(3)")
+write(out1,"N170 G01 Y7.473")
+write(out1,"N180TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N190 G03 I-0.0150")
+write(out1,"N200TC_LASER_OFF(3)")
+write(out1,"N210 G01 Y9.949")
+write(out1,"N220TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N230 G03 I-0.0150")
+write(out1,"N240TC_LASER_OFF(3)")
+write(out1,"N250 G01 Y11.658")
+write(out1,"N260TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N270 G03 I-0.0150")
+write(out1,"N280TC_LASER_OFF(3)")
+write(out1,"N290 G01 Y15.844")
+write(out1,"N300TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N310 G03 I-0.0150")
+write(out1,"N320TC_LASER_OFF(3)")
+write(out1,"N330 G01 Y20.029")
+write(out1,"N340TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N350 G03 I-0.0150")
+write(out1,"N360TC_LASER_OFF(3)")
+write(out1,"N370 G01 X3.287 Y21.911")
+write(out1,"N380TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N390 G03 I-0.0150")
+write(out1,"N400TC_LASER_OFF(3)")
+write(out1,"N410 G01 X7.917")
+write(out1,"N420TC_LASER_ON(11,"21425",0,500)")
+write(out1,"N430 G03 I-0.0150")
+write(out1,"N440TC_LASER_OFF(3)")
+write(out1,"N450 G01 X9.949")
+write(out1,"N460TC_LASER_ON(11,"21425",0,500)")
+
+
+return
+
+end
+
+
+
+
+
+
+
+    

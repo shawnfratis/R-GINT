@@ -1,6 +1,6 @@
-#fg3dLite 2017 FratisGraphics
+#r-gint 2018 FratisGraphics
 
-#Program to utilize Unicons 3D capabilities.
+#G-code generator/converter/interpreter/visualizer.
 
 #Some of this code is from the University of Arizona and Rosetta Code. Please contact me if you would like specifics of this.
 #shawnfratis@gmail.com
@@ -472,9 +472,7 @@ class U3DViewer : Dialog(view_model3d, mFile, miLoadModel, miQuit,
    method on_editable_text_list_2(ev)
    entry(editable_text_list_2.get_contents())
    end
-
-   ####################################################
-                                  
+                                   
    method on_text_field_18(ev)
    end 
 
@@ -489,9 +487,7 @@ class U3DViewer : Dialog(view_model3d, mFile, miLoadModel, miQuit,
 
    method on_text_field_19(ev)
    end
-
-   ########################################################
-
+   
    method on_part_name(ev)
    end
 
@@ -587,14 +583,16 @@ class U3DViewer : Dialog(view_model3d, mFile, miLoadModel, miQuit,
    end
 
    method on_text_button_18(ev)
-   mainqq()
+   #mainqq()
+   mainqqq()
    end
  
    method on_text_button_3(ev)
    end
  
    method on_text_button_19(ev)
-   dxfmain(editable_text_list_5.get_contents())
+   #dxfmain(editable_text_list_5.get_contents())
+   cv1main(editable_text_list_5.get_contents())
    end
 
    ################################################
