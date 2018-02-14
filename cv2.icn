@@ -10,14 +10,14 @@
 #Made in Unicon, with Unicon IDE
 #unicon.sourceforge.net
 
-#Bosch to 840d convert
+#840d text code converter
 
 #################################################
 
 link lists
 link printf
 
-procedure cv1main(aa)
+procedure cv2main(aa)
 
 out := open("input.txt","w")
 	every l := !aa do {
@@ -28,7 +28,7 @@ end
 
 #############################################
 
-procedure mainqqq()
+procedure mainqqqq()
 removelines("input.txt")
 end
  
