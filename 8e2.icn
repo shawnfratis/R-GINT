@@ -1,0 +1,234 @@
+#r-gint 2018 FratisGraphics
+
+#G-code generator/converter/interpreter/visualizer.
+
+#Some of this code is from the University of Arizona and Rosetta Code. Please contact me if you would like specifics of this.
+#shawnfratis@gmail.com
+
+#Integrated with Jafar Al-Gharaibeh's Unicon 3D viewer.
+
+#Made in Unicon, with Unicon IDE
+#unicon.sourceforge.net
+
+#840d edit TEXT
+
+#################################################
+
+link lists
+link printf
+
+procedure main82x(aa)
+
+out := open("input2.txt","w")
+	every l := !aa do {
+		write(out,l)
+}
+return()
+end
+
+#############################################
+
+procedure main88()
+removelines88("input2.txt")
+end
+ 
+procedure removelines88(fn)
+
+   f := open(fn,"r") | read(f)                  
+   every put(F := [],|read(f))
+
+hstck := F
+
+every ndle := !["START_TEXT"] do {                                         
+ 
+   if i := lindex(hstck,ndle) then {                                           
+      write("item =",ndle, " is at position ",i," in list.")                
+           }
+         }
+    main288(i)
+   end
+
+#procedure last(p,arglist)               
+#local i
+#every i := p!arglist
+#return \i
+#end  
+
+#procedure lindex(lst, x)		
+  # local i
+    #every i := 1 to *lst do
+      #if lst[i] === x then suspend i
+ 
+#end 
+
+#########################################################
+
+procedure main288(i) 
+   removelines2288("input.txt2",1,i) | stop("Failed to remove lines.")
+   main388()
+end
+ 
+procedure removelines2288(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   out := open("output.txt","w") | stop("Unable to open ",out)
+
+   every put(F := [],|read(f))               
+   close(f)
+ 
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+ 
+   f := open(fn,"rw") | fail                  
+   every write(\!F)
+   every write(out,\!F)             
+   close(out)
+   return 
+  end
+
+#########################################################
+
+  procedure main388() 
+   removelines3388("output.txt",0,0) | stop("Failed to remove lines.")
+   return
+end
+ 
+procedure removelines3388(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   every put(F := [],|read(f))               
+   
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+    
+   ff := open(fn,"w") | fail                  
+   every write(\!F)                         
+        
+out1 := open("output.txt","w")
+
+write(out1,"N12060 G00 X117.764 Y54.908")
+write(out1,"N12070 TC_LASER_ON(11,\"21425\",0,500)")
+write(out1,"N12080 G01 X117.776")
+write(out1,"N12090 X117.799 Y54.896")
+write(out1,"N12100 X117.811 Y54.884")
+write(out1,"N12110 X117.823 Y54.86")
+write(out1,"N12120 Y54.812")
+write(out1,"N12130 X117.811 Y54.788")
+write(out1,"N12140 X117.799 Y54.777")
+write(out1,"N12150 X117.776 Y54.765")
+write(out1,"N12160 X117.752")
+write(out1,"N12170 X117.728 Y54.777")
+write(out1,"N12180 X117.692 Y54.8")
+write(out1,"N12190 X117.573 Y54.919")
+write(out1,"N12200 Y54.753")
+write(out1,"N12210 TC_LASER_OFF(1)")
+write(out1,"N12220 X117.823 Y54.622")
+write(out1,"N12230 TC_LASER_ON(11,\"21425\",0,500)")
+write(out1,"N12240 X117.811 Y54.658")
+write(out1,"N12250 X117.776 Y54.681")
+write(out1,"N12260 X117.716 Y54.693")
+write(out1,"N12270 X117.68")
+write(out1,"N12280 X117.621 Y54.681")
+write(out1,"N12290 X117.585 Y54.658")
+write(out1,"N12300 X117.573 Y54.622")
+write(out1,"N12310 Y54.598")
+write(out1,"N12320 X117.585 Y54.562")
+write(out1,"N12330 X117.621 Y54.538")
+write(out1,"N12340 X117.68 Y54.527")
+write(out1,"N12350 X117.716")
+write(out1,"N12360 X117.776 Y54.538")
+write(out1,"N12370 X117.811 Y54.562")
+write(out1,"N12380 X117.823 Y54.598")
+write(out1,"N12390 Y54.622")
+write(out1,"N12400 TC_LASER_OFF(1)")
+write(out1,"N12410 Y54.443")
+write(out1,"N12420 TC_LASER_ON(11,\"21425\",0,500)")
+write(out1,"N12430 Y54.312")
+write(out1,"N12440 X117.728 Y54.384")
+write(out1,"N12450 Y54.348")
+write(out1,"N12460 X117.716 Y54.324")
+write(out1,"N12470 X117.704 Y54.312")
+write(out1,"N12480 X117.668 Y54.3")
+write(out1,"N12490 X117.645")
+write(out1,"N12500 X117.609 Y54.312")
+write(out1,"N12510 X117.585 Y54.336")
+write(out1,"N12520 X117.573 Y54.372")
+write(out1,"N12530 Y54.408")
+write(out1,"N12540 X117.585 Y54.443")
+write(out1,"N12550 X117.597 Y54.455")
+write(out1,"N12560 X117.621 Y54.467")
+write(out1,"N12570 TC_LASER_OFF(1)")
+write(out1,"N12580 X117.823 Y54.181")
+write(out1,"N12590 TC_LASER_ON(11,\"21425\",0,500)")
+write(out1,"N12600 X117.811 Y54.217")
+write(out1,"N12610 X117.787 Y54.229")
+write(out1,"N12620 X117.764")
+write(out1,"N12630 X117.74 Y54.217")
+write(out1,"N12640 X117.728 Y54.193")
+write(out1,"N12650 X117.716 Y54.146")
+write(out1,"N12660 X117.704 Y54.11")
+write(out1,"N12670 X117.68 Y54.086")
+write(out1,"N12680 X117.656 Y54.074")
+write(out1,"N12690 X117.621")
+write(out1,"N12700 X117.597 Y54.086")
+write(out1,"N12710 X117.585 Y54.098")
+write(out1,"N12720 X117.573 Y54.134")
+write(out1,"N12730 Y54.181")
+write(out1,"N12740 X117.585 Y54.217")
+write(out1,"N12750 X117.597 Y54.229")
+write(out1,"N12760 X117.621 Y54.241")
+write(out1,"N12770 X117.656")
+write(out1,"N12780 X117.68 Y54.229")
+write(out1,"N12790 X117.704 Y54.205")
+write(out1,"N12800 X117.716 Y54.169")
+write(out1,"N12810 X117.728 Y54.122")
+write(out1,"N12820 X117.74 Y54.098")
+write(out1,"N12830 X117.764 Y54.086")
+write(out1,"N12840 X117.787")
+write(out1,"N12850 X117.811 Y54.098")
+write(out1,"N12860 X117.823 Y54.134")
+write(out1,"N12870 Y54.181")
+write(out1,"N12880 TC_LASER_OFF(1)")
+write(out1,"N12890 X117.776 Y53.725")
+write(out1,"N12900 TC_LASER_ON(11,\"21425\",0,500)")
+write(out1,"N12910 X117.787 Y53.701")
+write(out1,"N12920 X117.823 Y53.665")
+write(out1,"N12930 X117.573")
+write(out1,"N12940 TC_LASER_OFF(1)")
+write(out1,"N12950 X117.787 Y53.439")
+write(out1,"N12960 TC_LASER_ON(11,\"21425\",0,500)")
+write(out1,"N12970 X117.811 Y53.463")
+write(out1,"N12980 X117.823 Y53.499")
+write(out1,"N12990 Y53.546")
+write(out1,"N13000 X117.811 Y53.582")
+write(out1,"N13010 X117.787 Y53.606")
+write(out1,"N13020 X117.764")
+write(out1,"N13030 X117.74 Y53.594")
+write(out1,"N13040 X117.728 Y53.582")
+write(out1,"N13050 X117.716 Y53.558")
+write(out1,"N13060 X117.692 Y53.487")
+write(out1,"N13070 X117.68 Y53.463")
+write(out1,"N13080 X117.668 Y53.451")
+write(out1,"N13090 X117.645 Y53.439")
+write(out1,"N13100 X117.609")
+write(out1,"N13110 X117.585 Y53.463")
+write(out1,"N13120 X117.573 Y53.499")
+write(out1,"N13130 Y53.546")
+write(out1,"N13140 X117.585 Y53.582")
+write(out1,"N13150 X117.609 Y53.606")
+write(out1,"N13160 TC_LASER_OFF(1)")
+write(out1,"N13170 X117.823 Y53.368")
+write(out1,"N13180 TC_LASER_ON(11,\"21425\",0,500)")
+write(out1,"N13190 X117.573")
+write(out1,"N13200 TC_LASER_OFF(1)")
+write(out1,"N13210 X89.525 Y39.328")
+
+return
+
+end
+
+##################################
+###################################
+################################
+
+    
