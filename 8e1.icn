@@ -1378,8 +1378,6 @@ write(out1,"N12000TC_LASER_OFF(3)")
 write(out1,"F[]|0")
 write(out1,"N12020TC_LASER_ON(11,\"21425\",0,500)")
 write(out1,"N12030 G03 I-0.0150")
-write(out1,"N12040TC_LASER_OFF(3)")
-write(out1,"N12050")
 
 return
 

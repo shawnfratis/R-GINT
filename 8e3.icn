@@ -39,7 +39,7 @@ procedure removelines888(fn)
 
 hstck := F
 
-every ndle := !["START_TEXT"] do {                                         
+every ndle := !["N13220; ( CUT NUMBER=8 )"] do {                                         
  
    if i := lindex(hstck,ndle) then {                                           
       write("item =",ndle, " is at position ",i," in list.")                
@@ -89,7 +89,7 @@ procedure removelines22888(fn,start,skip)
 #########################################################
 
   procedure main3888() 
-   removelines33888("output.txt",0,0) | stop("Failed to remove lines.")
+   removelines33888("output3.txt",0,0) | stop("Failed to remove lines.")
    return
 end
  
@@ -109,7 +109,7 @@ out1 := open("output.txt","w")
 write(out1,"N13220; ( CUT NUMBER=8 )")
 write(out1,"N13230 TC_LASER_ON(1,\"21425\",10,110)")
 write(out1,"N13240 TC_LASERCORR_ON(T_RIGHT)")
-write(out1,"N13250 X89.475 Y39.328")
+write(out1,F[3]|0)
 write(out1,"N13260 TC_LASER_ON(5,\"21425\",0,100)")
 write(out1,"N13270 Y56.417")
 write(out1,"N13280 X115.868")

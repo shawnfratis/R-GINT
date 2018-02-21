@@ -39,7 +39,7 @@ procedure removelines88(fn)
 
 hstck := F
 
-every ndle := !["START_TEXT"] do {                                         
+every ndle := !["G00"] do {  #make read seq number--same for 3                                       
  
    if i := lindex(hstck,ndle) then {                                           
       write("item =",ndle, " is at position ",i," in list.")                
@@ -54,8 +54,8 @@ every ndle := !["START_TEXT"] do {
 #return \i
 #end  
 
-#procedure lindex(lst, x)		
-  # local i
+#procedure lindex2(lst, x)		
+   #local i
     #every i := 1 to *lst do
       #if lst[i] === x then suspend i
  
@@ -64,7 +64,7 @@ every ndle := !["START_TEXT"] do {
 #########################################################
 
 procedure main288(i) 
-   removelines2288("input.txt2",1,i) | stop("Failed to remove lines.")
+   removelines2288("input2.txt",1,i) | stop("Failed to remove lines.")
    main388()
 end
  
@@ -106,7 +106,10 @@ procedure removelines3388(fn,start,skip)
         
 out1 := open("output.txt","w")
 
-write(out1,"N12060 G00 X117.764 Y54.908")
+write(out1,"N12020TC_LASER_ON(11,\"21425\",0,500)")
+write(out1,"N12040TC_LASER_OFF(3)")
+write(out1,"N12050")
+write(out1,F[1]|0)
 write(out1,"N12070 TC_LASER_ON(11,\"21425\",0,500)")
 write(out1,"N12080 G01 X117.776")
 write(out1,"N12090 X117.799 Y54.896")
