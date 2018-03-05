@@ -28,6 +28,12 @@ end
 
 #############################################
 
+procedure firstnum(qq)
+write(qq)
+end
+
+#############################################
+
 procedure main88()
 removelines88("input2.txt")
 end
@@ -39,27 +45,17 @@ procedure removelines88(fn)
 
 hstck := F
 
-every ndle := !["G00"] do {  #make read seq number--same for 3                                       
+firstnum(qqq)
+
+every ndle := !["N1890"] do {  
  
    if i := lindex(hstck,ndle) then {                                           
       write("item =",ndle, " is at position ",i," in list.")                
            }
          }
+
     main288(i)
    end
-
-#procedure last(p,arglist)               
-#local i
-#every i := p!arglist
-#return \i
-#end  
-
-#procedure lindex2(lst, x)		
-   #local i
-    #every i := 1 to *lst do
-      #if lst[i] === x then suspend i
- 
-#end 
 
 #########################################################
 
