@@ -617,7 +617,7 @@ class U3DViewer : Dialog(view_model3d, mFile, miLoadModel, miQuit,
    end
 
    method on_text_field_68(ev)
-   firstnum(text_field_68.get_contents())
+   main88(text_field_68.get_contents())
    end
 
    method on_text_field_69(ev)

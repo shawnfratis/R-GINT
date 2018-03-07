@@ -28,33 +28,30 @@ end
 
 #############################################
 
-procedure firstnum(qq)
-write(qq)
-end
-
-#############################################
-
-procedure main88()
-removelines88("input2.txt")
+procedure main88(qq)
+removelines88("input2.txt",qq)
 end
  
-procedure removelines88(fn)
+procedure removelines88(fn,qqq)
 
    f := open(fn,"r") | read(f)                  
    every put(F := [],|read(f))
 
 hstck := F
 
-firstnum(qqq)
+write(qqq)
 
-every ndle := !["N1890"] do {  
+#qqq := ("qzq")
+
+every ndle := !["N1890"] do { 
+#every ndle := !['qqq'] do {   
  
    if i := lindex(hstck,ndle) then {                                           
       write("item =",ndle, " is at position ",i," in list.")                
            }
          }
 
-    main288(i)
+       main288(i)
    end
 
 #########################################################
