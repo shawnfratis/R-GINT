@@ -756,15 +756,23 @@ end
 
 ######################################################
 
-procedure dxfin(at)
+procedure dxfin(qq1,qq2,qqx,qq3,qq4,qqxx)
 
-(ax := at[1],bx := at[2],cx := at[3],dx := at[4],ex := at[5])
-(fx := at[6],gx := at[7],hx := at[8])
+(qq1 := x1,qq2 := y1,qqx := z1)
+(qq3 := x2,qq4 := y2,qqxx := z2)
 
-at := (ax||bx||cx||dx||ex||fx||gx||hx)
- 
-cube02(at)
+s := 1
+c := ("blue")
+
+#(ax := at[1],bx := at[2],cx := at[3],dx := at[4],ex := at[5])
+#(fx := at[6],gx := at[7],hx := at[8])
+
+#at := (ax||bx||cx||dx||ex||fx||gx||hx)
+#cube02(at)
 #gcode(att,axt)
+
+inpglcube01(x1,y1,z1,s,c)
+inpglcube01(x2,y2,z2,s,c)
 
 return()
 
