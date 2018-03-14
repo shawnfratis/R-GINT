@@ -118,9 +118,9 @@ procedure removelines38888(fn,start,skip)
 
 
    qqx := 0
+   qqxx := 0
 
-
-   dxfin(qq1,qq2,qqx,qq3,qq4,qqx)
+   dxfin(qq1,qq2,qqx,qq3,qq4,qqxx)
 
    
 out1 := open("output.txt","w")
