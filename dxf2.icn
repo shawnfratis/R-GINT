@@ -89,40 +89,67 @@ procedure removelines38888(fn,start,skip)
    every F[start - 1 + (1 to skip)] := &null 
     
    ff := open(fn,"w") | fail                  
-   every write(\!F)                         
+   every write(\!F) 
+
+###########################################################
+
+  xxx := 6
+  yyy := 8
+  zzz := 10
+
+   xx := 0
+   yy := 0
+   zz := 0
+
+   repeat {
+      xx +:= 10
+       yy +:= 10
+        zz +:= 10 
+          if xx 
+               
       
-   qq1 := F[8]|0
-   write(qq1)
-   qq2 := F[10]|0
-   write(qq2)
+   qq001 := F[xxx + xx]|0
+   qq002 := F[yyy + yy]|0
+   qq003 := F[zzz + zz]|0
 
-   qq3 := F[20]|0
-   write(qq3)
-   qq4 := F[22]|0
-   write(qq4)
-   
-   qq5 := F[32]|0
-   write(qq5)
-   qq6 := F[34]|0
-   write(qq6)
+   #qq004 := F[20]|0
+   #qq005 := F[22]|0
+   #qq006 := F[24]|0
 
-   qq7 := F[44]|0
-   write(qq7)
-   qq8 := F[46]|0
-   write(qq8)
+   #qq007 := F[32]|0
+   #qq008 := F[34]|0
+   #qq009 := F[36]|0
 
-   qq9 := F[56]|0
-   write(qq9)
-   qq10 := F[58]|0
-   write(qq10)
+   #qq010 := F[56]|0
+   #qq011 := F[58]|0
+   #qq012 := F[60]|0
 
+   #qq013 := F[68]|0
+   #qq014 := F[70]|0
+   #qq015 := F[72]|0
 
-   qqx := 0
-   qqxx := 0
-
-   dxfin(qq1,qq2,qqx,qq3,qq4,qqxx)
+   #qq016 := F[80]|0
+   #qq017 := F[82]|0
+   #qq018 := F[84]|0
 
    
+
+##########################################################
+
+qs1 := 1
+
+qc1 := ("green")
+
+inpglcube01(qq001,qq002,qq002,qs1,qc1)
+#inpglcube01(qq004,qq002,qq002,qs1,qc1)
+#inpglcube01(qq007,qq002,qq002,qs1,qc1)
+#inpglcube01(qq010,qq002,qq002,qs1,qc1)
+#inpglcube01(qq013,qq002,qq002,qs1,qc1)
+#inpglcube01(qq016,qq002,qq002,qs1,qc1)
+
+   
+##########################################################
+    
 out1 := open("output.txt","w")
 
 write(out1,"%")
@@ -141,72 +168,6 @@ write(out1,"N12G00X",F[8],"Y",F[10])
 write(out1,"N13Q23")
 #write(out1,"N14X",x002)#test to here
 write(out1,"N15Q23")
-#write(out1,"N16X",x003,"Y",y002)
-write(out1,"N17Q23")
-#write(out1,"N18Y",y003)
-write(out1,"N19Q23")
-#write(out1,"N20Y",y004)
-write(out1,"N21Q23")
-#write(out1,"N22Y",y005)
-write(out1,"N23Q23")
-#write(out1,"N24Y",y006)
-write(out1,"N25Q23")
-write(out1,"N26X2.261Y20.878")#test to here
-write(out1,"N27Q23")
-write(out1,"N28X6.772")
-write(out1,"N29Q23")
-write(out1,"N30X10.839")
-write(out1,"N31Q23")
-write(out1,"N32X14.921")
-write(out1,"N33Q23")
-write(out1,"N34X19.432")
-write(out1,"N35Q23")
-write(out1,"N36X20.878Y18.996")
-write(out1,"N37Q23")
-write(out1,"N38Y14.921")
-write(out1,"N39Q23")
-write(out1,"N40Y10.854")
-write(out1,"N41Q23")
-write(out1,"N42Y6.772")
-write(out1,"N43Q23")
-write(out1,"N44Y2.697")
-write(out1,"N45Q23")
-write(out1,"N46X18.996Y.815")
-write(out1,"N47Q23")
-write(out1,"N48X14.921")
-write(out1,"N49Q23")
-write(out1,"N50X10.854")
-write(out1,"N51Q23")
-write(out1,"N52X1.538Y1.488")
-write(out1,"N53 G801[2122011]")
-write(out1,"N54 Q24")
-write(out1,"N55G01X1.488")
-write(out1,"N56G801[2122000]")
-write(out1,"N57Y20.205")
-write(out1,"N58X20.205")
-write(out1,"N59Y1.488")
-write(out1,"N60X1.488")
-write(out1,"N61Q28")
-write(out1,"N62G00X.496Y.45")
-write(out1,"N63 G801[2122011]")
-write(out1,"N64 Q24")
-write(out1,"N65G01Y.5")
-write(out1,"N66G801[2122000]")
-write(out1,"N67Y21.193")
-write(out1,"N68G02X.5Y21.197I.004J0")
-write(out1,"N69G01X21.193")
-write(out1,"N70G02X21.197Y21.193I0J-.004")
-write(out1,"N71G01Y.5")
-write(out1,"N72G02X21.193Y.496I-.004J0")
-write(out1,"N73G01X1.538")
-write(out1,"N74X.5")
-write(out1,"N75G02X.496Y.5I0J.004")
-write(out1,"N76G01X.446")
-write(out1,"N77Q28")
-write(out1,"/N78Q26")
-write(out1,"/N79G00X0")
-write(out1,"N80M30")
-write(out1,"%")
 
 return
 
