@@ -93,24 +93,58 @@ procedure removelines38888(fn,start,skip)
 
 ###########################################################
 
-  xxx := 6
-  yyy := 8
-  zzz := 10
+  xxx := 8
+  yyy := 10
+  zzz := 12
 
    xx := 0
    yy := 0
    zz := 0
 
+########################################
+#this might work
    repeat {
-      xx +:= 10
-       yy +:= 10
-        zz +:= 10 
-          if xx 
-               
+      xx +:= 12
+       yy +:= 12
+        zz +:= 12
+         # if xx 
+             #}
+ #####################################
+              
+#in1 := open(args[1]) | stop("*** cannot open file 1")
+
+#xxx := args[2]
+#yyy := args[3]
+
+
+    #count := 0
+    #count1 := 0
+     #count2 := 0
+
+       #every !in1  ?  {
+      #write(find(xxx))
+      #count +:= 1
+
+     # write(find(yyy))
+    # } do
+     # count1 +:= 1
+
+     #  write(find(zzz))
+    # } do
+    #  count1 +:= 1
+
+
+   #write(count)
+  # write(count1)
+  # write(count2)
+
+########################################
       
    qq001 := F[xxx + xx]|0
    qq002 := F[yyy + yy]|0
    qq003 := F[zzz + zz]|0
+
+    # }
 
    #qq004 := F[20]|0
    #qq005 := F[22]|0
@@ -133,7 +167,7 @@ procedure removelines38888(fn,start,skip)
    #qq018 := F[84]|0
 
    
-
+}
 ##########################################################
 
 qs1 := 1
@@ -168,7 +202,7 @@ write(out1,"N12G00X",F[8],"Y",F[10])
 write(out1,"N13Q23")
 #write(out1,"N14X",x002)#test to here
 write(out1,"N15Q23")
-
+#}
 return
 
 end
