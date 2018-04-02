@@ -97,112 +97,45 @@ procedure removelines38888(fn,start,skip)
   yyy := 10
   zzz := 12
 
+#repeat {
+
+qq001 := F[xxx+xx]
+qq002 := F[yyy+yy]
+qq003 := F[zzz+zz] 
+                     
    xx := 0
    yy := 0
    zz := 0
 
-########################################
-#this might work
-   repeat {
-      xx +:= 12
-       yy +:= 12
-        zz +:= 12
-         # if xx 
-             #}
- #####################################
-              
-#in1 := open(args[1]) | stop("*** cannot open file 1")
+until xxx := 0 do {
+     xx := xx + 12
+until yyy := 0 do {
+     yy := yy + 12
+until zzz := 0 do {
+     zz := zz + 12
 
-#xxx := args[2]
-#yyy := args[3]
+if xxx := 0  then break
+}
+}
+} 
+#break
+#if xxx := 8 then break
+#if zz := 0 then break
 
-
-    #count := 0
-    #count1 := 0
-     #count2 := 0
-
-       #every !in1  ?  {
-      #write(find(xxx))
-      #count +:= 1
-
-     # write(find(yyy))
-    # } do
-     # count1 +:= 1
-
-     #  write(find(zzz))
-    # } do
-    #  count1 +:= 1
-
-
-   #write(count)
-  # write(count1)
-  # write(count2)
+ # } 
+                     
+qs1 := 1
+qc1 := ("green")
+inpglcube01(qq001,qq002,qq002,qs1,qc1)
 
 ########################################
       
-   qq001 := F[xxx + xx]|0
-   qq002 := F[yyy + yy]|0
-   qq003 := F[zzz + zz]|0
-
-    # }
-
    #qq004 := F[20]|0
    #qq005 := F[22]|0
    #qq006 := F[24]|0
-
-   #qq007 := F[32]|0
-   #qq008 := F[34]|0
-   #qq009 := F[36]|0
-
-   #qq010 := F[56]|0
-   #qq011 := F[58]|0
-   #qq012 := F[60]|0
-
-   #qq013 := F[68]|0
-   #qq014 := F[70]|0
-   #qq015 := F[72]|0
-
-   #qq016 := F[80]|0
-   #qq017 := F[82]|0
-   #qq018 := F[84]|0
-
-   
-}
-##########################################################
-
-qs1 := 1
-
-qc1 := ("green")
-
-inpglcube01(qq001,qq002,qq002,qs1,qc1)
-#inpglcube01(qq004,qq002,qq002,qs1,qc1)
-#inpglcube01(qq007,qq002,qq002,qs1,qc1)
-#inpglcube01(qq010,qq002,qq002,qs1,qc1)
-#inpglcube01(qq013,qq002,qq002,qs1,qc1)
-#inpglcube01(qq016,qq002,qq002,qs1,qc1)
-
-   
+     
 ##########################################################
     
-out1 := open("output.txt","w")
-
-write(out1,"%")
-write(out1,"N1(DFS,P1,)")
-write(out1,"N2 ( PART NAME=box4 )")
-write(out1,"N3 ( MACHINE=L2503 LASER CAT )")
-write(out1,"N4 ( X SHEET WIDTH=100.1969 )")
-write(out1,"N5 ( Y SHEET HEIGHT=60.0394 )")
-write(out1,"N6 ( MATERIAL=Teksoft English Defaults )")
-write(out1,"N7 ( THICKNESS=.048 )")
-write(out1,"/N8Q20")
-write(out1,"N9G801[2122001]")
-write(out1,"/N10G60X0Y0 (ENTER ZERO OFFSET)")
-write(out1,"N11G24L12")
-write(out1,"N12G00X",F[8],"Y",F[10])
-write(out1,"N13Q23")
-#write(out1,"N14X",x002)#test to here
-write(out1,"N15Q23")
-#}
 return
 
 end
