@@ -104,9 +104,21 @@ qq003 := F[zzz]
 qs1 := 1
 qc1 := ("green")
 
-inpglcube01(qq001,qq002,qq003,qs1,qc1)
+#inpglcube01(qq001,qq002,qq003,qs1,qc1)
+#inpglcube01(F[xxx + 12],F[yyy + 12],F[zzz + 12],qs1,qc1)
 
-inpglcube01(F[xxx + 12],F[yyy + 12],F[zzz + 12],qs1,qc1)
+repeat{
+
+every xr := (8 to 48 by 12) do 
+every yr := (10 to 48 by 12) do 
+every zr := (12 to 48 by 12) do 
+
+inpglcube01(F[xr],F[yr],F[zr],qs1,qc1)
+if xr := 165.9359068262084 then break
+}
+#}
+#}
+#}
 
 ##########################################################
     
