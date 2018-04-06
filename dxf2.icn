@@ -109,12 +109,12 @@ qc1 := ("green")
 
 repeat{
 
-every xr := (8 to 48 by 12) do 
-every yr := (10 to 48 by 12) do 
-every zr := (12 to 48 by 12) do 
+every xr := (8 to 239 by 12) do 
+every yr := (10 to 239 by 12) do 
+every zr := (12 to 239 by 12) do 
 
 inpglcube01(F[xr],F[yr],F[zr],qs1,qc1)
-if xr := 165.9359068262084 then break
+if xr := 145.872915719845 then break
 }
 #}
 #}
