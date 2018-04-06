@@ -93,47 +93,21 @@ procedure removelines38888(fn,start,skip)
 
 ###########################################################
 
-  xxx := 8
-  yyy := 10
-  zzz := 12
-
-#repeat {
-
-qq001 := F[xxx+xx]
-qq002 := F[yyy+yy]
-qq003 := F[zzz+zz] 
-                     
-   xx := 0
-   yy := 0
-   zz := 0
-
-until xxx := 0 do {
-     xx := xx + 12
-until yyy := 0 do {
-     yy := yy + 12
-until zzz := 0 do {
-     zz := zz + 12
-
-if xxx := 0  then break
-}
-}
-} 
-#break
-#if xxx := 8 then break
-#if zz := 0 then break
-
- # } 
-                     
+xxx := 8
+yyy := 10
+zzz := 12
+         
+qq001 := F[xxx]
+qq002 := F[yyy]
+qq003 := F[zzz]
+            
 qs1 := 1
 qc1 := ("green")
-inpglcube01(qq001,qq002,qq002,qs1,qc1)
 
-########################################
-      
-   #qq004 := F[20]|0
-   #qq005 := F[22]|0
-   #qq006 := F[24]|0
-     
+inpglcube01(qq001,qq002,qq003,qs1,qc1)
+
+inpglcube01(F[xxx + 12],F[yyy + 12],F[zzz + 12],qs1,qc1)
+
 ##########################################################
     
 return
