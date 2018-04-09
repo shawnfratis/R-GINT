@@ -93,29 +93,53 @@ procedure removelines38888(fn,start,skip)
 
 ###########################################################
 
-xxx := 8
-yyy := 10
-zzz := 12
-         
-qq001 := F[xxx]
-qq002 := F[yyy]
-qq003 := F[zzz]
-            
 qs1 := 1
 qc1 := ("green")
 
+#xxx := 8
+#yyy := 10
+#zzz := 12
+         
+#qq001 := F[xxx]
+#qq002 := F[yyy]
+#qq003 := F[zzz]
+            
 #inpglcube01(qq001,qq002,qq003,qs1,qc1)
 #inpglcube01(F[xxx + 12],F[yyy + 12],F[zzz + 12],qs1,qc1)
 
-repeat{
+#repeat{
 
-every xr := (8 to 239 by 12) do 
-every yr := (10 to 239 by 12) do 
-every zr := (12 to 239 by 12) do 
+#######################################################
 
-inpglcube01(F[xr],F[yr],F[zr],qs1,qc1)
-if xr := 145.872915719845 then break
-}
+vx := F[] #[8,20,32,44] 
+vy := F[] #[10,22,34,46]
+vz := F[] #[12,24,36,48]
+
+every xr := !vx do
+every yr := !vy do
+every zr := !vz do
+
+##########################################################
+#REVERT to these if above doesn't work
+#every xr := F[8 to 239 by 12] do 
+#every yr := F[10 to 239 by 12] do 
+#every zr := F[12 to 239 by 12] do 
+##########################################################
+
+inpglcube01(xr,yr,zr,qs1,qc1)
+
+#inpglcube01(xr,0,0,qs1,qc1)
+#inpglcube01(xr,yr,0,qs1,qc1)
+#inpglcube01(0,0,zr,qs1,qc1)
+
+#every xr := (8 to 239 by 12) do 
+#every yr := (10 to 239 by 12) do 
+#every zr := (12 to 239 by 12) do 
+
+#inpglcube01(F[xr],F[yr],F[zr],qs1,qc1)
+
+#if xr := 145.872915719845 then break
+#}
 #}
 #}
 #}
