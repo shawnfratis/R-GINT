@@ -89,62 +89,138 @@ procedure removelines38888(fn,start,skip)
    every F[start - 1 + (1 to skip)] := &null 
     
    ff := open(fn,"w") | fail                  
-   every write(\!F) 
+   every write(\!F)
+
+out1 := open("output.txt","w")
 
 ###########################################################
 
-qs1 := 1
+#SET 3D ANGLE BETTER
+
+qs1 := .5
 qc1 := ("green")
 
-#xxx := 8
-#yyy := 10
-#zzz := 12
-         
-#qq001 := F[xxx]
-#qq002 := F[yyy]
-#qq003 := F[zzz]
-            
-#inpglcube01(qq001,qq002,qq003,qs1,qc1)
-#inpglcube01(F[xxx + 12],F[yyy + 12],F[zzz + 12],qs1,qc1)
+inpglcube01(F[8],F[10],F[12],qs1,qc1)
+inpglcube01(F[20],F[22],F[24],qs1,qc1)
+inpglcube01(F[32],F[34],F[36],qs1,qc1)
+inpglcube01(F[44],F[46],F[48],qs1,qc1)
+inpglcube01(F[56],F[58],F[60],qs1,qc1)
+inpglcube01(F[68],F[70],F[72],qs1,qc1)
+inpglcube01(F[80],F[82],F[84],qs1,qc1)
+inpglcube01(F[92],F[94],F[96],qs1,qc1)
+inpglcube01(F[104],F[106],F[108],qs1,qc1)
+inpglcube01(F[116],F[118],F[120],qs1,qc1)
+inpglcube01(F[128],F[130],F[132],qs1,qc1)
+inpglcube01(F[140],F[142],F[144],qs1,qc1)
+inpglcube01(F[152],F[154],F[156],qs1,qc1)
+inpglcube01(F[164],F[166],F[168],qs1,qc1)
+inpglcube01(F[176],F[178],F[180],qs1,qc1)
+inpglcube01(F[188],F[190],F[192],qs1,qc1)
+inpglcube01(F[200],F[202],F[204],qs1,qc1)
+inpglcube01(F[212],F[214],F[216],qs1,qc1)
+inpglcube01(F[224],F[226],F[228],qs1,qc1)
+inpglcube01(F[236],F[238],F[240],qs1,qc1)
+inpglcube01(F[250],F[252],F[254],qs1,qc1)
 
-#repeat{
-
-#######################################################
-
-vx := F[] #[8,20,32,44] 
-vy := F[] #[10,22,34,46]
-vz := F[] #[12,24,36,48]
-
-every xr := !vx do
-every yr := !vy do
-every zr := !vz do
-
-##########################################################
-#REVERT to these if above doesn't work
-#every xr := F[8 to 239 by 12] do 
-#every yr := F[10 to 239 by 12] do 
-#every zr := F[12 to 239 by 12] do 
-##########################################################
-
-inpglcube01(xr,yr,zr,qs1,qc1)
-
-#inpglcube01(xr,0,0,qs1,qc1)
-#inpglcube01(xr,yr,0,qs1,qc1)
-#inpglcube01(0,0,zr,qs1,qc1)
-
-#every xr := (8 to 239 by 12) do 
-#every yr := (10 to 239 by 12) do 
-#every zr := (12 to 239 by 12) do 
-
-#inpglcube01(F[xr],F[yr],F[zr],qs1,qc1)
-
-#if xr := 145.872915719845 then break
-#}
-#}
-#}
-#}
+#inpglcube01(F[],F[],F[],qs1,qc1)
+#inpglcube01(F[],F[],F[],qs1,qc1)
+#inpglcube01(F[],F[],F[],qs1,qc1)
+#inpglcube01(F[],F[],F[],qs1,qc1)
+#inpglcube01(F[],F[],F[],qs1,qc1)
 
 ##########################################################
+
+#SET ZERO POINT
+
+write(out1,"%")
+write(out1,"N1(DFS,P5000,1S1E)")
+write(out1,"N2 ( PART NAME=1S1E )")
+write(out1,"N3 ( MACHINE=L2503 LASER CAT )")
+write(out1,"N4 ( X SHEET WIDTH=110. )")
+write(out1,"N5 ( Y SHEET HEIGHT=60. )")
+write(out1,"N6 ( MATERIAL=Teksoft English Defaults )")
+write(out1,"N7 ( THICKNESS=.048 )")
+write(out1,"/N8Q20")
+write(out1,"N9G801[2122001]")
+write(out1,"/N10G60X0Y0 (ENTER ZERO OFFSET)")
+write(out1,"N11G24L12")
+write(out1,"N12G00X",F[8],"Y",F[10])
+write(out1,"N13Q23")
+write(out1,"N14X",F[20],"Y",F[22])
+write(out1,"N15Q23")
+write(out1,"N16X",F[32],"Y",F[34])
+write(out1,"N17Q23")
+write(out1,"N18X",F[44],"Y",F[46])
+write(out1,"N19Q23")
+write(out1,"N20X",F[56],"Y",F[58])
+write(out1,"N21Q23")
+write(out1,"N22X",F[68],"Y",F[70])
+write(out1,"N23Q23")
+write(out1,"N24X",F[80],"Y",F[82])
+write(out1,"N25Q23")
+write(out1,"N26X",F[92],"Y",F[94])
+write(out1,"N27Q23")
+write(out1,"N28X",F[104],"Y",F[106])
+write(out1,"N29Q23")
+write(out1,"N30X",F[116],"Y",F[118])
+write(out1,"N31Q23")
+write(out1,"N32X",F[128],"Y",F[130])
+write(out1,"N33Q23")
+write(out1,"N34X",F[140],"Y",F[142])
+write(out1,"N35Q23")
+write(out1,"N36X",F[152],"Y",F[154])
+write(out1,"N37Q23")
+
+#ENTITIES
+ # 0
+#POINT
+  #5
+#57B
+  #8
+#SKIN_DIVOTS
+ #10
+#147.75480547661491
+ #20
+#61.42297324408495
+ #30
+#0.0
+ # 0
+#POINT
+ # 5
+#57C
+ # 8
+#SKIN_DIVOTS
+# 10
+#151.82960861104141
+# 20
+#61.42297324408495
+# 30
+#0.0
+#  0
+#POINT
+#  5
+#57D
+#  8
+#SKIN_DIVOTS
+# 10
+#155.9122857611865
+ #20
+#61.42297324408495
+# 30
+#0.0
+#  0
+#POINT
+#  5
+#57E
+ # 8
+#SKIN_DIVOTS
+# 10
+#159.97921487989339
+# 20
+#61.42297324408495
+# 30
+
+#####################################################
     
 return
 
