@@ -96,23 +96,15 @@ procedure removelines3388(fn,start,skip)
         
 out1 := open("output.txt","w")
 
-D001 := pretrim(F[2],"N12G00")
-D002 := pretrim(F[4],"N14G00")
-D003 := pretrim(F[5],"N16G00")
-D004 := pretrim(F[6],"N18G00")
-D005 := pretrim(F[7],"N20G00")
-D006 := pretrim(F[8],"N22G00")
-D007 := pretrim(F[9],"N24G00")
-D008 := pretrim(F[10],"N26G00")
-D009 := pretrim(F[11],"N28G00")
-D010 := pretrim(F[12],"N30G00")
-
+#D001 := pretrim(F[1],"N12G00")
+D001 := F[1]
 
 #write(out1,"N12020TC_LASER_ON(11,\"21425\",0,500)")
 #write(out1,"N12040TC_LASER_OFF(3)")
 #write(out1,"N12050")
-write(out1,"N12060"F[1]|0)
-write(out1,"N12070 TC_LASER_ON(11,\"21425\",0,500)"
+#write(out1,"N12060"F[1]|0)
+write(out1,"N12060",D001|0)
+write(out1,"N12070 TC_LASER_ON(11,\"21425\",0,500)")
 write(out1,"N12080 G01 X117.776")
 write(out1,"N12090 X117.799 Y54.896")#########
 write(out1,"N12100 X117.811 Y54.884")######
