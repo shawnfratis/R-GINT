@@ -16,6 +16,7 @@
 
 link lists
 link printf
+link strings
 
 procedure main82x(aa)
 
@@ -97,7 +98,9 @@ procedure removelines3388(fn,start,skip)
 out1 := open("output.txt","w")
 
 #D001 := pretrim(F[1],"N12G00")
-D001 := F[1]
+#D001 := (F[1],(tab(upto("X"))))
+D001 := (d := ? upto("X",(F[1])))||(deletes(F[1],d))
+#D001 := ? find("X",(F[1]))
 
 #write(out1,"N12020TC_LASER_ON(11,\"21425\",0,500)")
 #write(out1,"N12040TC_LASER_OFF(3)")
