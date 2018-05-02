@@ -99,14 +99,19 @@ out1 := open("output.txt","w")
 
 #D001 := pretrim(F[1],"N12G00")
 #D001 := (F[1],(tab(upto("X"))))
-D001 := (d := ? upto("X",(F[1])))||(deletes(F[1],d))
 #D001 := ? find("X",(F[1]))
+#D001 := (d := ? upto("X",(F[1])))||(deletes(F[1],d))
+#D001 := F[1] ? tab(upto("X"))
+#D001 := pretrim(F[1],trim("N168",3))
 
+D001 := pretrim(F[1],(F[1] ? tab(5))) #seems to work
+
+                                   
 #write(out1,"N12020TC_LASER_ON(11,\"21425\",0,500)")
 #write(out1,"N12040TC_LASER_OFF(3)")
 #write(out1,"N12050")
 #write(out1,"N12060"F[1]|0)
-write(out1,"N12060",D001|0)
+write(out1,"N12060 ",D001|0)
 write(out1,"N12070 TC_LASER_ON(11,\"21425\",0,500)")
 write(out1,"N12080 G01 X117.776")
 write(out1,"N12090 X117.799 Y54.896")#########
