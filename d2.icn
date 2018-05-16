@@ -11,13 +11,14 @@
 #unicon.sourceforge.net
 
 #DXF to 3d translator
+#TEXT
 
 #################################################
 
 link lists
 link printf
 
-procedure main84x(aa)
+procedure main85x(aa)
 
 out := open("input.txt","w")
 	every l := !aa do {
@@ -28,8 +29,8 @@ end
 
 #############################################
 
-procedure main8888()
-removelines8888("input.txt")
+procedure main8889()
+removelines8889("input.txt")
 end
  
 procedure removelines8888(fn)
@@ -39,23 +40,23 @@ procedure removelines8888(fn)
 
 hstck := F
 
-every ndle := !["ENTITIES"] do {                                         
+every ndle := !["TEXT"] do {                                         
  
    if i := lindex(hstck,ndle) then {                                           
       write("item =",ndle, " is at position ",i," in list.")                
            }
          }
-    main2q8888(i)
+    main2q8889(i)
    end
 
 #########################################################
 
-procedure main2q8888(i) 
-   removelines28888("input.txt",1,i) | stop("Failed to remove lines.")
-   main38888()
+procedure main2q8889(i) 
+   removelines28889("input.txt",1,i) | stop("Failed to remove lines.")
+   main38889()
 end
  
-procedure removelines28888(fn,start,skip)
+procedure removelines28889(fn,start,skip)
  
    f := open(fn,"r") | fail                  
    out := open("output.txt","w") | stop("Unable to open ",out)
@@ -75,12 +76,12 @@ procedure removelines28888(fn,start,skip)
 
 #########################################################
 
-  procedure main38888() 
-   removelines38888("output.txt",0,0) | stop("Failed to remove lines.")
+  procedure main38889() 
+   removelines38889("output.txt",0,0) | stop("Failed to remove lines.")
    return
 end
  
-procedure removelines38888(fn,start,skip)
+procedure removelines38889(fn,start,skip)
  
    f := open(fn,"r") | fail                  
    every put(F := [],|read(f))               
@@ -128,25 +129,25 @@ inpglcube01(F[272|0],F[274|0],F[276|0],qs1,qc1)
 inpglcube01(F[284|0],F[286|0],F[288|0],qs1,qc1)
 inpglcube01(F[296|0],F[298|0],F[300|0],qs1,qc1)
 
-#inpglline01(F[308|0],F[310|0],F[312|0],F[320|0],F[322|0],F[324|0],qc1)
-#inpglline01(F[332|0],F[334|0],F[336|0],F[344|0],F[346|0],F[348|0],qc1)
-#inpglline01(F[356|0],F[358|0],F[360|0],F[368|0],F[370|0],F[372|0],qc1)
-#inpglline01(F[380|0],F[382|0],F[384|0],F[392|0],F[394|0],F[396|0],qc1)
-#inpglline01(F[404|0],F[406|0],F[408|0],F[416|0],F[418|0],F[420|0],qc1)
-#inpglline01(F[428|0],F[430|0],F[432|0],F[440|0],F[442|0],F[444|0],qc1)
+inpglline01(F[308|0],F[310|0],F[312|0],F[320|0],F[322|0],F[324|0],qc1)
+inpglline01(F[332|0],F[334|0],F[336|0],F[344|0],F[346|0],F[348|0],qc1)
+inpglline01(F[356|0],F[358|0],F[360|0],F[368|0],F[370|0],F[372|0],qc1)
+inpglline01(F[380|0],F[382|0],F[384|0],F[392|0],F[394|0],F[396|0],qc1)
+inpglline01(F[404|0],F[406|0],F[408|0],F[416|0],F[418|0],F[420|0],qc1)
+inpglline01(F[428|0],F[430|0],F[432|0],F[440|0],F[442|0],F[444|0],qc1)
 
-inpglcube01(F[308|0],F[310|0],F[312|0],qs1,qc1)
-inpglcube01(F[320|0],F[322|0],F[324|0],qs1,qc1)
-inpglcube01(F[332|0],F[334|0],F[336|0],qs1,qc1)
-inpglcube01(F[344|0],F[346|0],F[348|0],qs1,qc1)
-inpglcube01(F[356|0],F[358|0],F[360|0],qs1,qc1)
-inpglcube01(F[368|0],F[370|0],F[372|0],qs1,qc1)
-inpglcube01(F[380|0],F[382|0],F[384|0],qs1,qc1)
-inpglcube01(F[392|0],F[394|0],F[396|0],qs1,qc1)
-inpglcube01(F[404|0],F[406|0],F[408|0],qs1,qc1)
-inpglcube01(F[416|0],F[418|0],F[420|0],qs1,qc1)
-inpglcube01(F[428|0],F[430|0],F[432|0],qs1,qc1)
-inpglcube01(F[440|0],F[442|0],F[444|0],qs1,qc1)
+#inpglcube01(F[308|0],F[310|0],F[312|0],qs1,qc1)
+#inpglcube01(F[320|0],F[322|0],F[324|0],qs1,qc1)
+#inpglcube01(F[332|0],F[334|0],F[336|0],qs1,qc1)
+#inpglcube01(F[344|0],F[346|0],F[348|0],qs1,qc1)
+#inpglcube01(F[356|0],F[358|0],F[360|0],qs1,qc1)
+#inpglcube01(F[368|0],F[370|0],F[372|0],qs1,qc1)
+#inpglcube01(F[380|0],F[382|0],F[384|0],qs1,qc1)
+#inpglcube01(F[392|0],F[394|0],F[396|0],qs1,qc1)
+#inpglcube01(F[404|0],F[406|0],F[408|0],qs1,qc1)
+#inpglcube01(F[416|0],F[418|0],F[420|0],qs1,qc1)
+#inpglcube01(F[428|0],F[430|0],F[432|0],qs1,qc1)
+#inpglcube01(F[440|0],F[442|0],F[444|0],qs1,qc1)
 
 inpglcube01(F[452|0],F[454|0],F[456|0],qs1,qc1)
 inpglcube01(F[464|0],F[466|0],F[468|0],qs1,qc1)
