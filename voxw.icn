@@ -38,6 +38,18 @@ return()
 
 end
 
+#########################################################
+
+procedure inpglline01(ipx,ipy,ipz,iqx,iqy,iqz,rgb)
+
+Fg(rgb)
+DrawLine(ipx,ipy,ipz,iqx,iqy,iqz)
+
+return()
+
+end
+
+
 ##################################################
 
 procedure inpglplane01(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,rgb)
