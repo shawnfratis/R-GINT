@@ -1,0 +1,27 @@
+procedure main() # remove lines
+    #main2()
+   removelines("input.txt",3,2) | stop("Failed to remove lines.")
+end
+ 
+procedure removelines(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  # open to read
+   every put(F := [],|read(f))               # file to list
+   close(f)
+ 
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null # mark delete
+ 
+   f := open(fn,"w") | fail                  # open to rewrite
+   every write(\!F)                          # write non-nulls
+   #close(f)
+   main2(f)
+   return                                    # done
+end
+
+procedure main2(FF)
+in := FF
+#in  := open(f := "input.txt","r") | stop("Unable to open ",f)
+out := open(f := "output.txt","w") | stop("Unable to open ",f)
+while write(out,read(in))
+end

@@ -1,0 +1,57 @@
+import gui
+$include "guih.icn"
+
+class Untitled : Dialog(editable_text_list_1)
+   method component_setup()
+      self.setup()
+   end
+
+   method end_dialog()
+   end
+
+   method init_dialog()
+   end
+
+   method on_editable_text_list_1(ev)
+   end
+
+   method setup()
+      self.set_attribs("size=644,399")
+      editable_text_list_1 := EditableTextList()
+      editable_text_list_1.set_pos("12", "9")
+      editable_text_list_1.set_size("197", "283")
+      editable_text_list_1.set_draw_border()
+      editable_text_list_1.connect(self, "on_editable_text_list_1", KEY_PRESS_EVENT)
+      editable_text_list_1.set_contents(["this:", "that:", "thing:", "wad:"])
+      self.add(editable_text_list_1)
+   end
+
+   initially
+      self.Dialog.initially()
+end
+
+procedure main()
+   local d
+   d := Untitled()
+   d.show_modal()
+end
+
+### Ivib-v2 layout ##
+#class|Canvas|17|Name Table|table|integer|0|1|string|editable_text_list
+#|integer|1|SuperClass Name|string|Dialog|Import Name|string|gui|Button
+# Groups|class|ButtonGroupSet|2|Parent Canvas|1|Boxes|list|0|Checkbox G
+#roups|class|CheckBoxGroupSet|2|Parent Canvas|1|Boxes|list|0|Gen Indent
+#|integer|3|Gen Main|integer|1|Gen Component Setup|integer|1|Gen Init D
+#ialog|integer|1|Gen Initially|integer|1|Dialog Struct|class|CDialog|4|
+#Min Width|null|Min Height|null|Ticker Rate|null|Attribs|list|0|Name|st
+#ring|Untitled|Width|integer|644|Height|integer|399|Items|list|1|class|
+#CanvasEditableTextList|26|Parent Canvas|1|Name|string|editable_text_li
+#st_1|Class Name|string|EditableTextList|Import Name|string|gui|X Fix|n
+#ull|Y Fix|null|W Fix|null|H Fix|null|W Default|null|H Default|null|X S
+#pec|string|12|Y Spec|string|9|W Spec|string|197|H Spec|string|283|X Al
+#ign|string|l|Y Align|string|t|Is shaded|null|Is Button Subclass|null|D
+#raw Border|integer|1|Attribs|list|0|Tooltip|null|Accel|null|Event Hand
+#lers|list|1|list|2|string|KEY_PRESS_EVENT|string|on_editable_text_list
+#_1|Class Variable|integer|1|Parent Component|1|Contents|list|4|string|
+#this:|string|that:|string|thing:|string|wad:|Initial Focus|null|Event 
+#Handlers|null|

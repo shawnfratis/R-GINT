@@ -1,0 +1,52 @@
+procedure main()
+
+return main2("box1.dxf","output.txt")
+end
+
+procedure main2(s,out1)
+
+s := open(s,"r")
+out1 := open(out1,"w") 
+
+    ws := ' \t'
+    vars := table()
+    every line := !s do {
+        line ? {
+            tab(many(ws))
+
+            #if any := ("0"|"SECTION") then next
+            if any('$*') | pos(0) then next
+            vars[map(tab(upto(ws)\1|0))] := getValue()
+            }
+        }
+    show(vars)
+end
+ 
+procedure getValue()
+    ws := ' \t'
+    a := []
+    while not ('EOF') do {
+             tab(many(ws))
+        put(a, trim(tab(upto('')|0)))
+        move(1)
+        }
+    return a
+end
+ 
+procedure show(t)
+    every pair := !sort(t) do {
+        every (s := pair[1]||" = ") ||:= !pair[2] || ", "
+        write(s[1:-2])
+        }
+end
+
+#procedure main()
+#write(readline("foo.bar.txt",7)|"failed")
+#end
+ 
+#procedure readline(f,n)                         # return n'th #line of file f
+#f := open(\f,"r") | fail                        # open file
+#every  i := n & line := |read(f) \ n do i -:= 1  #  <== here
+#close(f)
+#if i = 0 then return line
+#end
