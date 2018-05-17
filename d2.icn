@@ -33,7 +33,7 @@ procedure main8889()
 removelines8889("input.txt")
 end
  
-procedure removelines8888(fn)
+procedure removelines8889(fn)
 
    f := open(fn,"r") | read(f)                  
    every put(F := [],|read(f))
