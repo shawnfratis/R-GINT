@@ -40,7 +40,7 @@ procedure removelines88(fn)
 
 hstck := F
 
-write(qqq)
+#write(qqq)
 
 every ndle := !["START TEXT"] do { 
  
@@ -98,6 +98,54 @@ procedure removelines3388(fn,start,skip)
 out1 := open("output.txt","w")
 
 D001 := pretrim(F[1],(F[1] ? tab(5))) #seems to work
+
+D001 := pretrim(F[1],(F[1] ? tab(td))) #seems to work
+D002 := pretrim(F[4],(F[4] ? tab(td))) 
+D003 := pretrim(F[6],(F[6] ? tab(td))) 
+D004 := pretrim(F[7],(F[7] ? tab(td))) 
+D005 := pretrim(F[8],(F[8] ? tab(td))) 
+D006 := pretrim(F[9],(F[9] ? tab(td))) 
+D007 := pretrim(F[11],(F[11] ? tab(td))) 
+D008 := pretrim(F[14],(F[14] ? tab(td))) 
+D009 := pretrim(F[16],(F[16] ? tab(td))) 
+D010 := pretrim(F[17],(F[17] ? tab(td))) 
+D011 := pretrim(F[18],(F[18] ? tab(td))) 
+D012 := pretrim(F[19],(F[19] ? tab(td))) 
+D013 := pretrim(F[20],(F[20] ? tab(td))) 
+D014 := pretrim(F[21],(F[21] ? tab(td))) 
+D015 := pretrim(F[22],(F[22] ? tab(td))) 
+D016 := pretrim(F[23],(F[23] ? tab(td))) 
+D017 := pretrim(F[24],(F[24] ? tab(td))) 
+D018 := pretrim(F[25],(F[25] ? tab(td))) 
+D019 := pretrim(F[1],(F[1] ? tab(td))) 
+D020 := pretrim(F[1],(F[1] ? tab(td)))
+
+D021 := pretrim(F[1],(F[1] ? tab(td))) 
+D022 := pretrim(F[1],(F[1] ? tab(td))) 
+D023 := pretrim(F[1],(F[1] ? tab(td))) 
+D024 := pretrim(F[1],(F[1] ? tab(td))) 
+D025 := pretrim(F[1],(F[1] ? tab(td))) 
+D026 := pretrim(F[1],(F[1] ? tab(td))) 
+D027 := pretrim(F[1],(F[1] ? tab(td))) 
+D028 := pretrim(F[1],(F[1] ? tab(td))) 
+D029 := pretrim(F[1],(F[1] ? tab(td))) 
+D030 := pretrim(F[1],(F[1] ? tab(td))) 
+D031 := pretrim(F[1],(F[1] ? tab(td))) 
+D032 := pretrim(F[1],(F[1] ? tab(td))) 
+D033 := pretrim(F[1],(F[1] ? tab(td))) 
+D034 := pretrim(F[1],(F[1] ? tab(td))) 
+D035 := pretrim(F[1],(F[1] ? tab(td))) 
+D036 := pretrim(F[1],(F[1] ? tab(td))) 
+D037 := pretrim(F[1],(F[1] ? tab(td))) 
+D038 := pretrim(F[1],(F[1] ? tab(td))) 
+D039 := pretrim(F[1],(F[1] ? tab(td))) 
+D040 := pretrim(F[1],(F[1] ? tab(td)))
+D041 := pretrim(F[1],(F[1] ? tab(td)))
+D042 := pretrim(F[1],(F[1] ? tab(td)))
+D043 := pretrim(F[1],(F[1] ? tab(td)))
+D044 := pretrim(F[1],(F[1] ? tab(td)))
+D045 := pretrim(F[1],(F[1] ? tab(td)))
+
                                    
 #write(out1,"N12020TC_LASER_ON(11,\"21425\",0,500)")
 #write(out1,"N12040TC_LASER_OFF(3)")
@@ -219,6 +267,8 @@ write(out1,"N13180 TC_LASER_ON(11,\"21425\",0,500)")
 write(out1,"N13190 X117.573")
 write(out1,"N13200 TC_LASER_OFF(1)")
 write(out1,"N13210 X89.525 Y39.328")
+
+
 
 return
 
